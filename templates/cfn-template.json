@@ -1,0 +1,1778 @@
+{
+ "Conditions": {
+  "CUSTOM_ALERT_SNS_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AlertsSnsTopicRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_API_HOST": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "ApiHost"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_API_PROTOCOL": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "ApiProtocol"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_API_STAGE": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "ApiStage"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_AUTH_WEB_CLIENT": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AuthUserPoolClientWebRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_BACKEND_API_HOSTNAME": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "BackendApiHostname"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_DEPLOYMENT_SECRET_ARN": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "DeploymentSecretArn"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_FULL_DOMAIN_NAME": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "FullDomainName"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_GITHUB_TOKEN_SECRET_NAME": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "GithubSecretArn"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_IDENTITY_POOL_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AuthIdentityPoolRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "LocalOutgoingConnectionSecurityGroupId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_NAT_OUTGOING_CONNECTIONS_SG": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "NatOutgoingConnectionSecurityGroupId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "PrimaryPrivateSubnetRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_RESTAPI_ID": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "RestApiId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_ROOT_RESOURCE_ID": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "RootResourceId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "SecondaryPrivateSubnetRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_USER_POOL_ARN": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AuthUserPoolArn"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_USER_POOL_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AuthUserPoolRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_VPC_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "VPCRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "IS_PROD": {
+   "Fn::Equals": [
+    {
+     "Ref": "DeploymentType"
+    },
+    "PROD"
+   ]
+  },
+  "MANUAL_APPROVAL_SELECTED": {
+   "Fn::Equals": [
+    {
+     "Ref": "CICDManualApproval"
+    },
+    "True"
+   ]
+  }
+ },
+ "Parameters": {
+  "AlertsSnsTopicRef": {
+   "Default": "",
+   "Description": "(optional) The ref of the sns topic to deliver alarms",
+   "Type": "String"
+  },
+  "ApiHost": {
+   "Default": "",
+   "Description": "(optional) Hostname of the Api Gateway",
+   "Type": "String"
+  },
+  "ApiProtocol": {
+   "Default": "",
+   "Description": "(optional) https://",
+   "Type": "String"
+  },
+  "ApiStage": {
+   "Default": "",
+   "Description": "(optional) Api Gateway stage path: /Prod",
+   "Type": "String"
+  },
+  "AuthIdentityPoolRef": {
+   "Default": "",
+   "Description": "(optional) The REF of the user pool",
+   "Type": "String"
+  },
+  "AuthUserPoolArn": {
+   "Default": "",
+   "Description": "(optional) The ARN of the user pool",
+   "Type": "String"
+  },
+  "AuthUserPoolClientWebRef": {
+   "Default": "",
+   "Description": "(optional) The REF of the user pool web client",
+   "Type": "String"
+  },
+  "AuthUserPoolRef": {
+   "Default": "",
+   "Description": "(optional) The REF of the user pool",
+   "Type": "String"
+  },
+  "BackendApiHostname": {
+   "Default": "",
+   "Description": "(optional) api from api.dev.example.com",
+   "Type": "String"
+  },
+  "BuildspecPath": {
+   "Default": "",
+   "Description": "Path with filename to the buildspec.yml for CodeBuild",
+   "Type": "String"
+  },
+  "CICDManualApproval": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "Is manual approval required before deployment?",
+   "Type": "String"
+  },
+  "CommitID": {
+   "Default": "",
+   "Description": "(optional) GitHub commit ID of that has to be built",
+   "Type": "String"
+  },
+  "DeploymentId": {
+   "Description": "deployment_id",
+   "Type": "String"
+  },
+  "DeploymentSecretArn": {
+   "Default": "",
+   "Description": "(optional) The arn of the deployment_secret",
+   "Type": "String"
+  },
+  "DeploymentType": {
+   "Description": "[ DEV | PROD ]",
+   "Type": "String"
+  },
+  "FullDomainName": {
+   "Default": "",
+   "Description": "(optional) like dev.example.com",
+   "Type": "String"
+  },
+  "GithubBranch": {
+   "Default": "main",
+   "Description": "GitHub branch name to be deployed",
+   "Type": "String"
+  },
+  "GithubOwner": {
+   "Description": "Github account name",
+   "Type": "String"
+  },
+  "GithubRepoName": {
+   "Description": "GitHub repository name",
+   "Type": "String"
+  },
+  "GithubSecretArn": {
+   "Default": "",
+   "Description": "(optional) The arn of the github_secret",
+   "Type": "String"
+  },
+  "LocalOutgoingConnectionSecurityGroupId": {
+   "Default": "",
+   "Description": "(optional) Local outbound enabled SG",
+   "Type": "String"
+  },
+  "NatOutgoingConnectionSecurityGroupId": {
+   "Default": "",
+   "Description": "(optional) NAT outbound enabled SG",
+   "Type": "String"
+  },
+  "PipelineId": {
+   "Description": "pipeline_id",
+   "Type": "String"
+  },
+  "PrimaryPrivateSubnetRef": {
+   "Default": "",
+   "Description": "(optional) The primary private subnet in the VPC",
+   "Type": "String"
+  },
+  "RestApiId": {
+   "Default": "",
+   "Description": "(optional) The ref of the API Gateway to deploy to",
+   "Type": "String"
+  },
+  "RootResourceId": {
+   "Default": "",
+   "Description": "(optional) The ID of the API GW resource to deploy the newresources as children",
+   "Type": "String"
+  },
+  "SecondaryPrivateSubnetRef": {
+   "Default": "",
+   "Description": "(optional) The secondary private subnet in the VPC",
+   "Type": "String"
+  },
+  "VPCRef": {
+   "Default": "",
+   "Description": "(optional) The VPC",
+   "Type": "String"
+  }
+ },
+ "Resources": {
+  "ArtifactsBucket": {
+   "DeletionPolicy": "Delete",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "Type": "AWS::S3::Bucket"
+  },
+  "ArtifactsBucketPolicy": {
+   "Properties": {
+    "Bucket": {
+     "Ref": "ArtifactsBucket"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:GetBucketVersioning"
+       ],
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": false
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": [
+         {
+          "Fn::GetAtt": [
+           "CodePipelineServiceRole",
+           "Arn"
+          ]
+         },
+         {
+          "Fn::GetAtt": [
+           "CodeBuildServiceRole",
+           "Arn"
+          ]
+         }
+        ]
+       },
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:PutObject",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": [
+         {
+          "Fn::GetAtt": [
+           "CodePipelineServiceRole",
+           "Arn"
+          ]
+         },
+         {
+          "Fn::GetAtt": [
+           "CodeBuildServiceRole",
+           "Arn"
+          ]
+         }
+        ]
+       },
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Type": "AWS::S3::BucketPolicy"
+  },
+  "CloudWatchLoggingRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "apigateway.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "CodeBuildServiceRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "codebuild.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:CreateLogGroup"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "s3:*"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             }
+            ]
+           ]
+          },
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             },
+             "/*"
+            ]
+           ]
+          }
+         ]
+        },
+        {
+         "Action": [
+          "cloudformation:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "kms:GenerateDataKey*",
+          "kms:Encrypt",
+          "kms:Decrypt"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "sns:SendMessage"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         "-",
+         {
+          "Ref": "PipelineId"
+         },
+         "-CodeBuildService"
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "CodePipelineServiceRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "codepipeline.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:GetBucketVersioning*",
+          "s3:PutObject"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             }
+            ]
+           ]
+          },
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             },
+             "/*"
+            ]
+           ]
+          }
+         ]
+        },
+        {
+         "Action": [
+          "codebuild:StartBuild",
+          "codebuild:BatchGetBuilds"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "cloudwatch:*",
+          "sns:*",
+          "cloudformation:*",
+          "rds:*",
+          "sqs:*",
+          "iam:PassRole"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "lambda:InvokeFunction",
+          "lambda:ListFunctions"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         "-",
+         {
+          "Ref": "PipelineId"
+         },
+         "-CodePipelineService"
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "DeployCfnChangeSetRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "codedeploy.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForLambda"
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "DeployCfnRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "cloudformation.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "iam:CreateRole",
+          "iam:AttachRolePolicy",
+          "iam:PutRolePolicy",
+          "iam:PassRole",
+          "iam:DetachRolePolicy",
+          "iam:ListRolePolicies",
+          "iam:GetRole",
+          "iam:DeleteRolePolicy",
+          "iam:UpdateRoleDescription",
+          "iam:ListRoles",
+          "iam:DeleteRole",
+          "iam:GetRolePolicy",
+          "iam:CreateInstanceProfile",
+          "iam:AddRoleToInstanceProfile",
+          "iam:DeleteInstanceProfile",
+          "iam:GetInstanceProfile",
+          "iam:ListInstanceProfiles",
+          "iam:ListInstanceProfilesForRole",
+          "iam:RemoveRoleFromInstanceProfile"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "s3:CreateBucket",
+          "s3:GetObject",
+          "s3:List*"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             }
+            ]
+           ]
+          },
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             },
+             "/*"
+            ]
+           ]
+          }
+         ]
+        },
+        {
+         "Action": [
+          "s3:*",
+          "lambda:*",
+          "codedeploy:*",
+          "ec2:*",
+          "cloudwatch:PutMetricAlarm",
+          "cloudwatch:DeleteAlarms",
+          "route53:*",
+          "sns:*",
+          "dynamodb:*",
+          "sqs:*",
+          "cloudfront:CreateDistribution",
+          "cloudfront:UpdateDistribution",
+          "cloudfront:DeleteDistribution",
+          "cloudfront:TagResource",
+          "cloudfront:UntagResource",
+          "events:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "apigateway:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "cloudformation:CreateChangeSet",
+          "cloudformation:ExecuteChangeSet",
+          "cloudformation:DeleteChangeSet",
+          "cloudformation:DeleteStack"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         "-",
+         {
+          "Ref": "PipelineId"
+         },
+         "-DeployCloudformation"
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "LambdaExecutionRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "lambda.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+    ],
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "secretsmanager:Describe*",
+          "secretsmanager:Get*",
+          "secretsmanager:List*",
+          "secretsmanager:UpdateSecret"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "ec2:CreateNetworkInterface",
+          "ec2:DeleteNetworkInterface",
+          "ec2:Describe*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "s3:*",
+          "sqs:*",
+          "sns:*",
+          "ssm:*",
+          "lambda:*",
+          "dynamodb:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "cognito-idp:*"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::If": [
+           "CUSTOM_USER_POOL_ARN",
+           {
+            "Ref": "AuthUserPoolArn"
+           },
+           {
+            "Fn::ImportValue": {
+             "Fn::Join": [
+              "",
+              [
+               {
+                "Ref": "DeploymentId"
+               },
+               "-AuthUserPoolArn"
+              ]
+             ]
+            }
+           }
+          ]
+         }
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         {
+          "Ref": "PipelineId"
+         },
+         "LambdaExecution"
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "Pipeline": {
+   "DependsOn": [
+    "Project"
+   ],
+   "Properties": {
+    "ArtifactStore": {
+     "Location": {
+      "Ref": "ArtifactsBucket"
+     },
+     "Type": "S3"
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "CodePipelineServiceRole",
+      "Arn"
+     ]
+    },
+    "Stages": [
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Source",
+         "Owner": "ThirdParty",
+         "Provider": "GitHub",
+         "Version": "1"
+        },
+        "Configuration": {
+         "Branch": {
+          "Ref": "GithubBranch"
+         },
+         "OAuthToken": {
+          "Fn::Join": [
+           "",
+           [
+            "{{resolve:secretsmanager:",
+            {
+             "Fn::If": [
+              "CUSTOM_GITHUB_TOKEN_SECRET_NAME",
+              {
+               "Ref": "GithubSecretArn"
+              },
+              {
+               "Fn::ImportValue": {
+                "Fn::Join": [
+                 "",
+                 [
+                  {
+                   "Ref": "DeploymentId"
+                  },
+                  "-GithubSecretArn"
+                 ]
+                ]
+               }
+              }
+             ]
+            },
+            ":SecretString:token}}"
+           ]
+          ]
+         },
+         "Owner": {
+          "Ref": "GithubOwner"
+         },
+         "PollForSourceChanges": false,
+         "Repo": {
+          "Ref": "GithubRepoName"
+         }
+        },
+        "Name": "BuildSourceAction",
+        "OutputArtifacts": [
+         {
+          "Name": "SourceArtifact"
+         }
+        ],
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Source"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-",
+            {
+             "Ref": "PipelineId"
+            }
+           ]
+          ]
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "SourceArtifact"
+         }
+        ],
+        "Name": "BuildAction",
+        "OutputArtifacts": [
+         {
+          "Name": "BuildArtifact"
+         }
+        ],
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Build"
+     },
+     {
+      "Fn::If": [
+       "MANUAL_APPROVAL_SELECTED",
+       {
+        "Actions": [
+         {
+          "ActionTypeId": {
+           "Category": "Approval",
+           "Owner": "AWS",
+           "Provider": "Manual",
+           "Version": "1"
+          },
+          "Name": "ApprovalAction",
+          "RunOrder": 1
+         }
+        ],
+        "Name": "Approval"
+       },
+       {
+        "Ref": "AWS::NoValue"
+       }
+      ]
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ActionMode": "CHANGE_SET_REPLACE",
+         "Capabilities": "CAPABILITY_NAMED_IAM",
+         "ChangeSetName": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-",
+            {
+             "Ref": "PipelineId"
+            },
+            "-changeset"
+           ]
+          ]
+         },
+         "RoleArn": {
+          "Fn::GetAtt": [
+           "DeployCfnRole",
+           "Arn"
+          ]
+         },
+         "StackName": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-",
+            {
+             "Ref": "PipelineId"
+            }
+           ]
+          ]
+         },
+         "TemplateConfiguration": "BuildArtifact::cfn-params.json",
+         "TemplatePath": "BuildArtifact::cfn-post.yaml"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "BuildArtifact"
+         }
+        ],
+        "Name": "GenerateSharedChangeSet",
+        "OutputArtifacts": [],
+        "RunOrder": 1
+       },
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ActionMode": "CHANGE_SET_EXECUTE",
+         "ChangeSetName": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-",
+            {
+             "Ref": "PipelineId"
+            },
+            "-changeset"
+           ]
+          ]
+         },
+         "StackName": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-",
+            {
+             "Ref": "PipelineId"
+            }
+           ]
+          ]
+         }
+        },
+        "InputArtifacts": [],
+        "Name": "ExecuteChangeset",
+        "OutputArtifacts": [],
+        "RunOrder": 2
+       }
+      ],
+      "Name": "Deploy"
+     }
+    ]
+   },
+   "Type": "AWS::CodePipeline::Pipeline"
+  },
+  "PipelineWebhook": {
+   "Properties": {
+    "Authentication": "GITHUB_HMAC",
+    "AuthenticationConfiguration": {
+     "SecretToken": {
+      "Fn::Join": [
+       "",
+       [
+        "{{resolve:secretsmanager:",
+        {
+         "Fn::If": [
+          "CUSTOM_GITHUB_TOKEN_SECRET_NAME",
+          {
+           "Ref": "GithubSecretArn"
+          },
+          {
+           "Fn::ImportValue": {
+            "Fn::Join": [
+             "",
+             [
+              {
+               "Ref": "DeploymentId"
+              },
+              "-GithubSecretArn"
+             ]
+            ]
+           }
+          }
+         ]
+        },
+        ":SecretString:token}}"
+       ]
+      ]
+     }
+    },
+    "Filters": [
+     {
+      "JsonPath": "$.ref",
+      "MatchEquals": "refs/heads/{Branch}"
+     }
+    ],
+    "RegisterWithThirdParty": true,
+    "TargetAction": "BuildSourceAction",
+    "TargetPipeline": {
+     "Ref": "Pipeline"
+    },
+    "TargetPipelineVersion": {
+     "Fn::GetAtt": [
+      "Pipeline",
+      "Version"
+     ]
+    }
+   },
+   "Type": "AWS::CodePipeline::Webhook"
+  },
+  "Project": {
+   "DependsOn": "ArtifactsBucket",
+   "Properties": {
+    "Artifacts": {
+     "Type": "CODEPIPELINE"
+    },
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       " build project"
+      ]
+     ]
+    },
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_MEDIUM",
+     "EnvironmentVariables": [
+      {
+       "Name": "AWS_DEFAULT_REGION",
+       "Value": {
+        "Ref": "AWS::Region"
+       }
+      },
+      {
+       "Name": "S3_BUCKET",
+       "Value": {
+        "Ref": "ArtifactsBucket"
+       }
+      },
+      {
+       "Name": "DEPLOYMENT_SECRET_ARN",
+       "Value": {
+        "Fn::If": [
+         "CUSTOM_DEPLOYMENT_SECRET_ARN",
+         {
+          "Ref": "DeploymentSecretArn"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-DeploymentSecretArn"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "Name": "SERVICE_SECRET_ARN",
+       "Value": {
+        "Ref": "Secret"
+       }
+      },
+      {
+       "Name": "BUILD_ENV_VARS_JSON",
+       "Value": "{}"
+      },
+      {
+       "Name": "JSON",
+       "Value": {
+        "Fn::Sub": [
+         "{\"DeploymentId\":\"${DeploymentId}\",\"PipelineId\":\"${PipelineId}\",\"RestApiId\":\"${RestApiId}\",\"RootResourceId\":\"${RootResourceId}\",\"LambdaExecutionRoleARN\":\"${LambdaExecutionRoleARN}\",\"CodeDeployServiceRoleARN\":\"${CodeDeployServiceRoleARN}\",\"LocalOutgoingSecurityGroup\":\"${LocalOutgoingSecurityGroup}\",\"NATOutgoingSecurityGroup\":\"${NATOutgoingSecurityGroup}\",\"VPCRef\":\"${VPCRef}\",\"SubnetPrimary\":\"${PrimaryPrivateSubnetRef}\",\"SubnetSecondary\":\"${SecPrivateSubnetRef}\",\"ServiceSecretArn\":\"${ServiceSecretArn}\",\"ApiProtocol\":\"${ApiProtocol}\",\"ApiHost\":\"${ApiHost}\",\"ApiStage\":\"${ApiStage}\",\"CognitoProjectRegion\":\"${CognitoProjectRegion}\",\"CognitoRegion\":\"${CognitoRegion}\",\"UserPoolId\":\"${UserPoolId}\",\"IdentityPoolId\":\"${IdentityPoolId}\",\"AlertsTopicRef\":\"${AlertsTopicRef}\",\"EnvVarsJson\":\"${EnvVarsJson}\"}",
+         {
+          "AlertsTopicRef": {
+           "Fn::If": [
+            "CUSTOM_ALERT_SNS_REF",
+            {
+             "Ref": "AlertsSnsTopicRef"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-AlertsSnsTopicRef"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "ApiHost": {
+           "Fn::If": [
+            "CUSTOM_API_HOST",
+            {
+             "Ref": "ApiHost"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-ApiHost"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "ApiProtocol": {
+           "Fn::If": [
+            "CUSTOM_API_PROTOCOL",
+            {
+             "Ref": "ApiProtocol"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-ApiProtocol"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "ApiStage": {
+           "Fn::If": [
+            "CUSTOM_API_STAGE",
+            {
+             "Ref": "ApiStage"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-ApiStage"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "CodeDeployServiceRoleARN": {
+           "Fn::GetAtt": [
+            "DeployCfnChangeSetRole",
+            "Arn"
+           ]
+          },
+          "CognitoProjectRegion": {
+           "Ref": "AWS::Region"
+          },
+          "CognitoRegion": {
+           "Ref": "AWS::Region"
+          },
+          "DeploymentId": {
+           "Ref": "DeploymentId"
+          },
+          "EnvVarsJson": "",
+          "IdentityPoolId": {
+           "Fn::If": [
+            "CUSTOM_IDENTITY_POOL_REF",
+            {
+             "Ref": "AuthIdentityPoolRef"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-AuthIdentityPoolRef"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "LambdaExecutionRoleARN": {
+           "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+           ]
+          },
+          "LocalOutgoingSecurityGroup": {
+           "Fn::If": [
+            "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG",
+            {
+             "Ref": "LocalOutgoingConnectionSecurityGroupId"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-LocalOutgoingConnectionSecurityGroupId"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "NATOutgoingSecurityGroup": {
+           "Fn::If": [
+            "CUSTOM_NAT_OUTGOING_CONNECTIONS_SG",
+            {
+             "Ref": "NatOutgoingConnectionSecurityGroupId"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-NatOutgoingConnectionSecurityGroupId"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "PipelineId": {
+           "Ref": "PipelineId"
+          },
+          "PrimaryPrivateSubnetRef": {
+           "Fn::If": [
+            "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
+            {
+             "Ref": "PrimaryPrivateSubnetRef"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-PrimaryPrivateSubnetRef"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "RestApiId": {
+           "Fn::If": [
+            "CUSTOM_RESTAPI_ID",
+            {
+             "Ref": "RestApiId"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-RestApiId"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "RootResourceId": {
+           "Fn::If": [
+            "CUSTOM_ROOT_RESOURCE_ID",
+            {
+             "Ref": "RootResourceId"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-RootResourceId"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "SecPrivateSubnetRef": {
+           "Fn::If": [
+            "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
+            {
+             "Ref": "SecondaryPrivateSubnetRef"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-SecondaryPrivateSubnetRef"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "ServiceSecretArn": {
+           "Ref": "Secret"
+          },
+          "UserPoolId": {
+           "Fn::If": [
+            "CUSTOM_USER_POOL_REF",
+            {
+             "Ref": "AuthUserPoolRef"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-AuthUserPoolRef"
+               ]
+              ]
+             }
+            }
+           ]
+          },
+          "VPCRef": {
+           "Fn::If": [
+            "CUSTOM_VPC_REF",
+            {
+             "Ref": "VPCRef"
+            },
+            {
+             "Fn::ImportValue": {
+              "Fn::Join": [
+               "",
+               [
+                {
+                 "Ref": "DeploymentId"
+                },
+                "-VPCRef"
+               ]
+              ]
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "Image": "aws/codebuild/standard:7.0",
+     "Type": "LINUX_CONTAINER"
+    },
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "CodeBuildServiceRole",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": {
+      "Ref": "BuildspecPath"
+     },
+     "Type": "CODEPIPELINE"
+    },
+    "SourceVersion": {
+     "Ref": "CommitID"
+    },
+    "TimeoutInMinutes": 15
+   },
+   "Type": "AWS::CodeBuild::Project"
+  },
+  "Secret": {
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "SecretString": "{}"
+   },
+   "Type": "AWS::SecretsManager::Secret"
+  }
+ }
+}

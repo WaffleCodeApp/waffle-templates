@@ -1,0 +1,515 @@
+{
+ "Outputs": {
+  "AuthIdentityPoolRef": {
+   "Description": "AuthIdentityPoolRef",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AuthIdentityPoolRef"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "AuthIdentityPool"
+   }
+  },
+  "AuthRoleArn": {
+   "Description": "The ARN of the authorized role for users",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AuthRoleArn"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Fn::GetAtt": [
+     "AuthRole",
+     "Arn"
+    ]
+   }
+  },
+  "AuthRoleId": {
+   "Description": "The ID of the authorized role for users",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AuthRoleId"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Fn::GetAtt": [
+     "AuthRole",
+     "RoleId"
+    ]
+   }
+  },
+  "AuthRoleName": {
+   "Description": "The name of the authorized role for admin",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AuthRoleName"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "AuthRole"
+   }
+  },
+  "AuthUserPoolArn": {
+   "Description": "AuthUserPoolArn",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AuthUserPoolArn"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Fn::GetAtt": [
+     "AuthMFAUserPool",
+     "Arn"
+    ]
+   }
+  },
+  "AuthUserPoolClientWebRef": {
+   "Description": "TAuthUserPoolClientWebRef",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AuthUserPoolClientWebRef"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "AuthUserPoolClientWeb"
+   }
+  },
+  "AuthUserPoolRef": {
+   "Description": "AuthUserPoolRef",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AuthUserPoolRef"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "AuthMFAUserPool"
+   }
+  }
+ },
+ "Parameters": {
+  "AuthUserAuthenticationSMSText": {
+   "Description": "Text to be used in login SMS messages",
+   "Type": "String"
+  },
+  "AuthUserInvitationSMSText": {
+   "Description": "Text to be used in invitation SMS messages",
+   "Type": "String"
+  },
+  "AuthUserVerificationSMSText": {
+   "Description": "Text to be used in verification SMS messages",
+   "Type": "String"
+  },
+  "DeploymentId": {
+   "Description": "deployment_id",
+   "Type": "String"
+  }
+ },
+ "Resources": {
+  "AuthIdentityPool": {
+   "Properties": {
+    "AllowUnauthenticatedIdentities": false,
+    "CognitoIdentityProviders": [
+     {
+      "ClientId": {
+       "Ref": "AuthUserPoolClientWeb"
+      },
+      "ProviderName": {
+       "Fn::GetAtt": [
+        "AuthMFAUserPool",
+        "ProviderName"
+       ]
+      }
+     }
+    ],
+    "DeveloperProviderName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-users"
+      ]
+     ]
+    }
+   },
+   "Type": "AWS::Cognito::IdentityPool"
+  },
+  "AuthIdentityPoolRoleMap": {
+   "DependsOn": "AuthIdentityPool",
+   "Properties": {
+    "IdentityPoolId": {
+     "Ref": "AuthIdentityPool"
+    },
+    "Roles": {
+     "authenticated": {
+      "Fn::GetAtt": [
+       "AuthRole",
+       "Arn"
+      ]
+     }
+    }
+   },
+   "Type": "AWS::Cognito::IdentityPoolRoleAttachment"
+  },
+  "AuthMFAUserPool": {
+   "Properties": {
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": true,
+     "InviteMessageTemplate": {
+      "SMSMessage": {
+       "Ref": "AuthUserInvitationSMSText"
+      }
+     }
+    },
+    "MfaConfiguration": "OFF",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 12,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": true,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "phone_number",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     },
+     {
+      "AttributeDataType": "String",
+      "DeveloperOnlyAttribute": true,
+      "Mutable": true,
+      "Name": "role",
+      "Required": false
+     },
+     {
+       "AttributeDataType": "String",
+       "DeveloperOnlyAttribute": true,
+       "Mutable": true,
+       "Name": "organization",
+       "Required": false
+     },
+     {
+       "AttributeDataType": "String",
+       "DeveloperOnlyAttribute": true,
+       "Mutable": true,
+       "Name": "projects",
+       "Required": false
+     },
+     {
+       "AttributeDataType": "String",
+       "DeveloperOnlyAttribute": true,
+       "Mutable": true,
+       "Name": "customer",
+       "Required": false
+     }
+    ],
+    "SmsAuthenticationMessage": {
+     "Ref": "AuthUserAuthenticationSMSText"
+    },
+    "SmsConfiguration": {
+     "ExternalId": {
+      "Ref": "AWS::AccountId"
+     },
+     "SnsCallerArn": {
+      "Fn::GetAtt": [
+       "AuthSnsRole",
+       "Arn"
+      ]
+     }
+    },
+    "SmsVerificationMessage": {
+     "Ref": "AuthUserVerificationSMSText"
+    },
+    "UserPoolName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-users-MFA"
+      ]
+     ]
+    },
+    "UsernameAttributes": [
+     "email"
+    ]
+   },
+   "Type": "AWS::Cognito::UserPool"
+  },
+  "AuthRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRoleWithWebIdentity"
+       ],
+       "Condition": {
+        "ForAnyValue:StringLike": {
+         "cognito-identity.amazonaws.com:amr": "authenticated"
+        },
+        "StringEquals": {
+         "cognito-identity.amazonaws.com:aud": {
+          "Ref": "AuthIdentityPool"
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Federated": [
+         "cognito-identity.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "execute-api:Invoke"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:execute-api:",
+             {
+              "Ref": "AWS::Region"
+             },
+             ":",
+             {
+              "Ref": "AWS::AccountId"
+             },
+             ":",
+             "*",
+             "/*"
+            ]
+           ]
+          }
+         ]
+        },
+        {
+         "Action": [
+          "cognito-sync:*",
+          "cognito-identity:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         "-user-mfa-auth-policy"
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "AuthSnsRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "cognito-idp.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "sns:Publish"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         "-AuthMFASnsPolicy"
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "AuthUserPoolClientWeb": {
+   "DependsOn": "AuthMFAUserPool",
+   "Properties": {
+    "ClientName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-web-MFA"
+      ]
+     ]
+    },
+    "GenerateSecret": false,
+    "UserPoolId": {
+     "Ref": "AuthMFAUserPool"
+    }
+   },
+   "Type": "AWS::Cognito::UserPoolClient"
+  },
+  "AuthUserPoolRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "lambda.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "lambda:CreateFunction",
+          "sns:Publish",
+          "s3:GetObject"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "logs:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "arn:aws:logs:*:*:*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         "-AuthMFAUserPoolPolicy"
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  }
+ }
+}

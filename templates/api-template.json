@@ -1,0 +1,329 @@
+{
+ "Outputs": {
+  "ApiHost": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-ApiHost"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "ApiDomainName"
+   }
+  },
+  "ApiProtocol": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-ApiProtocol"
+      ]
+     ]
+    }
+   },
+   "Value": "https://"
+  },
+  "ApiStage": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-ApiStage"
+      ]
+     ]
+    }
+   },
+   "Value": "Prod"
+  },
+  "RestApiId": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-RestApiId"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "Api"
+   }
+  },
+  "RootResourceId": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-RootResourceId"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Fn::GetAtt": [
+     "Api",
+     "RootResourceId"
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BackendApiHostname": {
+   "Description": "api from api.dev.example.com",
+   "Type": "String"
+  },
+  "DeploymentId": {
+   "Description": "deployment_id",
+   "Type": "String"
+  },
+  "FullDomainName": {
+   "Description": "like dev.example.com",
+   "Type": "String"
+  },
+  "GenericCertificateArn": {
+   "Description": "arn of the generated certificate",
+   "Type": "String"
+  }
+ },
+ "Resources": {
+  "Api": {
+   "Properties": {
+    "BinaryMediaTypes": [
+     "multipart/form-data"
+    ],
+    "Description": "API gateway for the backend services",
+    "EndpointConfiguration": {
+     "Types": [
+      "REGIONAL"
+     ]
+    },
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-API"
+      ]
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::RestApi"
+  },
+  "ApiBasePathMapping": {
+   "Properties": {
+    "DomainName": {
+     "Ref": "ApiDomainName"
+    },
+    "RestApiId": {
+     "Ref": "Api"
+    }
+   },
+   "Type": "AWS::ApiGateway::BasePathMapping"
+  },
+  "ApiDNSRecordSet": {
+   "Properties": {
+    "Comment": "DNS settings of the generic API",
+    "HostedZoneName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "FullDomainName"
+       },
+       "."
+      ]
+     ]
+    },
+    "RecordSets": [
+     {
+      "AliasTarget": {
+       "DNSName": {
+        "Fn::GetAtt": [
+         "ApiDomainName",
+         "DistributionDomainName"
+        ]
+       },
+       "EvaluateTargetHealth": false,
+       "HostedZoneId": {
+        "Fn::GetAtt": [
+         "ApiDomainName",
+         "DistributionHostedZoneId"
+        ]
+       }
+      },
+      "Name": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "BackendApiHostname"
+         },
+         ".",
+         {
+          "Ref": "FullDomainName"
+         },
+         "."
+        ]
+       ]
+      },
+      "Type": "A"
+     }
+    ]
+   },
+   "Type": "AWS::Route53::RecordSetGroup"
+  },
+  "ApiDomainName": {
+   "Properties": {
+    "CertificateArn": {
+     "Ref": "GenericCertificateArn"
+    },
+    "DomainName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "BackendApiHostname"
+       },
+       ".",
+       {
+        "Ref": "FullDomainName"
+       }
+      ]
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::DomainName"
+  },
+  "ApiGwDomainName": {
+   "Properties": {
+    "Description": "The hostname of the api gateway",
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "/",
+       {
+        "Ref": "DeploymentId"
+       },
+       "/api/",
+       "hostName"
+      ]
+     ]
+    },
+    "Type": "String",
+    "Value": {
+     "Ref": "ApiDomainName"
+    }
+   },
+   "Type": "AWS::SSM::Parameter"
+  },
+  "ApigatewayUsagePlan": {
+   "DependsOn": "DeploymentProd",
+   "Properties": {
+    "ApiStages": [
+     {
+      "ApiId": {
+       "Ref": "Api"
+      },
+      "Stage": "Prod"
+     }
+    ],
+    "Description": "Generic ApiKey usage plan for the backend services"
+   },
+   "Type": "AWS::ApiGateway::UsagePlan"
+  },
+  "DeploymentProd": {
+   "DependsOn": [
+    "RootMethod"
+   ],
+   "Properties": {
+    "RestApiId": {
+     "Ref": "Api"
+    },
+    "StageName": "Prod"
+   },
+   "Type": "AWS::ApiGateway::Deployment"
+  },
+  "LoggingAccount": {
+   "DependsOn": [
+    "LoggingRole"
+   ],
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "LoggingRole",
+      "Arn"
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Account"
+  },
+  "LoggingRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "apigateway.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+    ]
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "RootMethod": {
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "ANY",
+    "Integration": {
+     "Type": "MOCK"
+    },
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "Api",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "Api"
+    }
+   },
+   "Type": "AWS::ApiGateway::Method"
+  }
+ }
+}

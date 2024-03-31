@@ -1,0 +1,1377 @@
+{
+ "Conditions": {
+  "AURORA_SELECTED": {
+   "Fn::Equals": [
+    {
+     "Ref": "DBType"
+    },
+    "aurora"
+   ]
+  },
+  "CREATE_REPLICA": {
+   "Fn::Equals": [
+    {
+     "Ref": "CreateReplica"
+    },
+    "Yes"
+   ]
+  },
+  "CUSTOM_ALERT_SNS_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AlertsSnsTopicRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_LOCAL_INCOMMING_CONNECTIONS_SG": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "LocalIncomingConnectionSecurityGroupId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "PrimaryPrivateSubnetRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "SecondaryPrivateSubnetRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_VPC_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "VPCRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "IS_PROD": {
+   "Fn::Equals": [
+    {
+     "Ref": "DeploymentType"
+    },
+    "PROD"
+   ]
+  },
+  "RDS_SELECTED": {
+   "Fn::Equals": [
+    {
+     "Ref": "DBType"
+    },
+    "rds"
+   ]
+  },
+  "USE_SNAPSHOT": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "SnaphotId"
+      },
+      ""
+     ]
+    }
+   ]
+  }
+ },
+ "Outputs": {
+  "DbSecretArn": {
+   "Description": "The name of the secret with the credentials of the db",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "DatabaseId"
+       },
+       "-DbSecretArn"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "DbMasterSecret"
+   }
+  }
+ },
+ "Parameters": {
+  "AlertsSnsTopicRef": {
+   "Default": "",
+   "Description": "The ref of the sns topic to deliver alarms",
+   "Type": "String"
+  },
+  "AllocatedStorageSize": {
+   "Default": "5",
+   "Description": "Allocated storage size",
+   "Type": "String"
+  },
+  "CreateReplica": {
+   "Default": "Yes",
+   "Description": "Boolean to setup replica creation for RDS",
+   "Type": "String"
+  },
+  "DBType": {
+   "AllowedValues": [
+    "rds",
+    "aurora"
+   ],
+   "Default": "aurora",
+   "Description": "DB Type - internally defined",
+   "Type": "String"
+  },
+  "DatabaseId": {
+   "Description": "database_id",
+   "Type": "String"
+  },
+  "DeploymentId": {
+   "Description": "deployment_id",
+   "Type": "String"
+  },
+  "DeploymentType": {
+   "Description": "[ DEV | PROD ]",
+   "Type": "String"
+  },
+  "Family": {
+   "Default": "aurora-postgresql15",
+   "Description": "DB family for RDS or Aurora",
+   "Type": "String"
+  },
+  "InstanceClass": {
+   "Default": "db.t3.micro",
+   "Description": "Postgres RDS or Aurora instance class",
+   "Type": "String"
+  },
+  "LocalIncomingConnectionSecurityGroupId": {
+   "Default": "",
+   "Description": "Local inbound enabled SG (optional)",
+   "Type": "String"
+  },
+  "PostgresEngineVersion": {
+   "Default": "15.3",
+   "Description": "Postgres RDS or Aurora engine version",
+   "Type": "String"
+  },
+  "PrimaryPrivateSubnetRef": {
+   "Default": "",
+   "Description": "The primary private subnet in the VPC (optional)",
+   "Type": "String"
+  },
+  "SecondaryPrivateSubnetRef": {
+   "Default": "",
+   "Description": "The secondary private subnet in the VPC (optional)",
+   "Type": "String"
+  },
+  "SnaphotId": {
+   "Default": "",
+   "Description": "Id of a snapshot to start with",
+   "Type": "String"
+  },
+  "VPCRef": {
+   "Default": "",
+   "Description": "The VPC (optional)",
+   "Type": "String"
+  }
+ },
+ "Resources": {
+  "AlbDnsNameParameter": {
+   "Properties": {
+    "Description": "The name of the secret with the credentials of the db",
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "/",
+       {
+        "Ref": "DeploymentId"
+       },
+       "/db/",
+       {
+        "Ref": "DatabaseId"
+       },
+       "/secretName"
+      ]
+     ]
+    },
+    "Type": "String",
+    "Value": {
+     "Ref": "DbMasterSecret"
+    }
+   },
+   "Type": "AWS::SSM::Parameter"
+  },
+  "AuroraClusterEventSubscription": {
+   "Condition": "AURORA_SELECTED",
+   "Properties": {
+    "EventCategories": [
+     "failover",
+     "failure",
+     "notification"
+    ],
+    "SnsTopicArn": {
+     "Fn::If": [
+      "CUSTOM_ALERT_SNS_REF",
+      {
+       "Ref": "AlertsSnsTopicRef"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-AlertsSnsTopicRef"
+         ]
+        ]
+       }
+      }
+     ]
+    },
+    "SourceIds": [
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Ref": "AuroraDBCluster"
+       },
+       {
+        "Ref": "AWS::NoValue"
+       }
+      ]
+     }
+    ],
+    "SourceType": "db-cluster"
+   },
+   "Type": "AWS::RDS::EventSubscription"
+  },
+  "AuroraDBCluster": {
+   "Condition": "AURORA_SELECTED",
+   "DeletionPolicy": "Snapshot",
+   "Properties": {
+    "BackupRetentionPeriod": {
+     "Fn::If": [
+      "IS_PROD",
+      35,
+      2
+     ]
+    },
+    "DBClusterParameterGroupName": {
+     "Ref": "DBClusterParamGroup"
+    },
+    "DBSubnetGroupName": {
+     "Ref": "DbSubnetGroup"
+    },
+    "DatabaseName": {
+     "Ref": "AWS::NoValue"
+    },
+    "EnableIAMDatabaseAuthentication": true,
+    "Engine": "aurora-postgresql",
+    "EngineVersion": {
+     "Ref": "PostgresEngineVersion"
+    },
+    "KmsKeyId": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      {
+       "Ref": "KMSCMK"
+      }
+     ]
+    },
+    "MasterUserPassword": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      {
+       "Fn::Join": [
+        "",
+        [
+         "{{resolve:secretsmanager:",
+         {
+          "Ref": "DbMasterSecret"
+         },
+         ":SecretString:password}}"
+        ]
+       ]
+      }
+     ]
+    },
+    "MasterUsername": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      {
+       "Fn::Join": [
+        "",
+        [
+         "{{resolve:secretsmanager:",
+         {
+          "Ref": "DbMasterSecret"
+         },
+         ":SecretString:username}}"
+        ]
+       ]
+      }
+     ]
+    },
+    "SnapshotIdentifier": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "SnaphotId"
+      },
+      {
+       "Ref": "AWS::NoValue"
+      }
+     ]
+    },
+    "StorageEncrypted": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      true
+     ]
+    },
+    "VpcSecurityGroupIds": [
+     {
+      "Fn::If": [
+       "CUSTOM_LOCAL_INCOMMING_CONNECTIONS_SG",
+       {
+        "Ref": "LocalIncomingConnectionSecurityGroupId"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-LocalIncomingConnectionSecurityGroupId"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "Type": "AWS::RDS::DBCluster",
+   "UpdateReplacePolicy": "Snapshot"
+  },
+  "AuroraDBFirstInstance": {
+   "Condition": "AURORA_SELECTED",
+   "Properties": {
+    "AutoMinorVersionUpgrade": {
+     "Fn::If": [
+      "IS_PROD",
+      false,
+      true
+     ]
+    },
+    "DBClusterIdentifier": {
+     "Ref": "AuroraDBCluster"
+    },
+    "DBInstanceClass": {
+     "Ref": "InstanceClass"
+    },
+    "DBParameterGroupName": {
+     "Ref": "DBParamGroup"
+    },
+    "DBSubnetGroupName": {
+     "Ref": "DbSubnetGroup"
+    },
+    "EnablePerformanceInsights": true,
+    "Engine": "aurora-postgresql",
+    "EngineVersion": {
+     "Ref": "PostgresEngineVersion"
+    },
+    "MonitoringInterval": {
+     "Fn::If": [
+      "IS_PROD",
+      1,
+      0
+     ]
+    },
+    "MonitoringRoleArn": {
+     "Fn::If": [
+      "IS_PROD",
+      {
+       "Fn::GetAtt": [
+        "MonitoringIAMRole",
+        "Arn"
+       ]
+      },
+      {
+       "Ref": "AWS::NoValue"
+      }
+     ]
+    },
+    "PerformanceInsightsKMSKeyId": {
+     "Ref": "KMSCMK"
+    },
+    "PerformanceInsightsRetentionPeriod": {
+     "Fn::If": [
+      "IS_PROD",
+      731,
+      7
+     ]
+    },
+    "PubliclyAccessible": false
+   },
+   "Type": "AWS::RDS::DBInstance"
+  },
+  "AuroraDBSecondInstance": {
+   "Condition": "AURORA_SELECTED",
+   "DependsOn": "AuroraDBFirstInstance",
+   "Properties": {
+    "AutoMinorVersionUpgrade": {
+     "Fn::If": [
+      "IS_PROD",
+      false,
+      true
+     ]
+    },
+    "DBClusterIdentifier": {
+     "Ref": "AuroraDBCluster"
+    },
+    "DBInstanceClass": {
+     "Ref": "InstanceClass"
+    },
+    "DBParameterGroupName": {
+     "Ref": "DBParamGroup"
+    },
+    "DBSubnetGroupName": {
+     "Ref": "DbSubnetGroup"
+    },
+    "EnablePerformanceInsights": true,
+    "Engine": "aurora-postgresql",
+    "EngineVersion": {
+     "Ref": "PostgresEngineVersion"
+    },
+    "MonitoringInterval": {
+     "Fn::If": [
+      "IS_PROD",
+      1,
+      0
+     ]
+    },
+    "MonitoringRoleArn": {
+     "Fn::If": [
+      "IS_PROD",
+      {
+       "Fn::GetAtt": [
+        "MonitoringIAMRole",
+        "Arn"
+       ]
+      },
+      {
+       "Ref": "AWS::NoValue"
+      }
+     ]
+    },
+    "PerformanceInsightsKMSKeyId": {
+     "Ref": "KMSCMK"
+    },
+    "PerformanceInsightsRetentionPeriod": {
+     "Fn::If": [
+      "IS_PROD",
+      731,
+      7
+     ]
+    },
+    "PubliclyAccessible": false
+   },
+   "Type": "AWS::RDS::DBInstance"
+  },
+  "CPUUtilizationAlarm": {
+   "Properties": {
+    "ActionsEnabled": true,
+    "AlarmActions": [
+     {
+      "Fn::If": [
+       "CUSTOM_ALERT_SNS_REF",
+       {
+        "Ref": "AlertsSnsTopicRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-AlertsSnsTopicRef"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "AlarmDescription": "DB CPU utilization high",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "First instance",
+      "Value": {
+       "Fn::If": [
+        "AURORA_SELECTED",
+        {
+         "Ref": "AuroraDBFirstInstance"
+        },
+        {
+         "Ref": "RdsDBFirstInstance"
+        }
+       ]
+      }
+     },
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Name": "Second instance",
+        "Value": {
+         "Ref": "AuroraDBSecondInstance"
+        }
+       },
+       {
+        "Fn::If": [
+         "CREATE_REPLICA",
+         {
+          "Name": "Second instance",
+          "Value": {
+           "Ref": "RdsDBReplicaForFirstInstance"
+          }
+         },
+         {
+          "Ref": "AWS::NoValue"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "EvaluationPeriods": "5",
+    "MetricName": "CPUUtilization",
+    "Namespace": "AWS/RDS",
+    "Period": "60",
+    "Statistic": "Maximum",
+    "Threshold": "80",
+    "TreatMissingData": "notBreaching",
+    "Unit": "Percent"
+   },
+   "Type": "AWS::CloudWatch::Alarm"
+  },
+  "DBClusterParamGroup": {
+   "Condition": "AURORA_SELECTED",
+   "Properties": {
+    "Description": "DB Cluster Parameter Group",
+    "Family": {
+     "Ref": "Family"
+    },
+    "Parameters": {
+     "rds.force_ssl": 1
+    }
+   },
+   "Type": "AWS::RDS::DBClusterParameterGroup"
+  },
+  "DBParamGroup": {
+   "Properties": {
+    "Description": "DB Instance Parameter Group",
+    "Family": {
+     "Ref": "Family"
+    },
+    "Parameters": {
+     "auto_explain.log_min_duration": 5000,
+     "auto_explain.log_verbose": 1,
+     "idle_in_transaction_session_timeout": 7200000,
+     "log_connections": 1,
+     "log_disconnections": 1,
+     "log_lock_waits": 1,
+     "log_min_duration_statement": 5000,
+     "log_rotation_age": 1440,
+     "log_rotation_size": 102400,
+     "log_statement": "ddl",
+     "max_standby_streaming_delay": 180000,
+     "random_page_cost": 1,
+     "rds.log_retention_period": 10080,
+     "search_path": "\"$user\",public",
+     "shared_preload_libraries": "auto_explain,pg_stat_statements,pg_hint_plan,pgaudit",
+     "statement_timeout": 7200000,
+     "track_activity_query_size": 16384
+    }
+   },
+   "Type": "AWS::RDS::DBParameterGroup"
+  },
+  "DBParameterGroupEventSubscription": {
+   "Condition": "AURORA_SELECTED",
+   "Properties": {
+    "EventCategories": [
+     "configuration change"
+    ],
+    "SnsTopicArn": {
+     "Fn::If": [
+      "CUSTOM_ALERT_SNS_REF",
+      {
+       "Ref": "AlertsSnsTopicRef"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-AlertsSnsTopicRef"
+         ]
+        ]
+       }
+      }
+     ]
+    },
+    "SourceIds": [
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Ref": "DBParamGroup"
+       },
+       {
+        "Ref": "AWS::NoValue"
+       }
+      ]
+     }
+    ],
+    "SourceType": "db-parameter-group"
+   },
+   "Type": "AWS::RDS::EventSubscription"
+  },
+  "DbMasterSecret": {
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "DatabaseId"
+       },
+       "PostgreSQL Master User Secret"
+      ]
+     ]
+    },
+    "GenerateSecretString": {
+     "ExcludeCharacters": "\"@/\\",
+     "GenerateStringKey": "password",
+     "PasswordLength": 16,
+     "SecretStringTemplate": "{\"username\": \"master\"}"
+    }
+   },
+   "Type": "AWS::SecretsManager::Secret"
+  },
+  "DbSubnetGroup": {
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnets of the DB",
+    "SubnetIds": [
+     {
+      "Fn::If": [
+       "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
+       {
+        "Ref": "PrimaryPrivateSubnetRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-PrimaryPrivateSubnetRef"
+          ]
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "Fn::If": [
+       "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
+       {
+        "Ref": "SecondaryPrivateSubnetRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-SecondaryPrivateSubnetRef"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "Type": "AWS::RDS::DBSubnetGroup"
+  },
+  "FreeLocalStorageAlarm": {
+   "Properties": {
+    "ActionsEnabled": true,
+    "AlarmActions": [
+     {
+      "Fn::If": [
+       "CUSTOM_ALERT_SNS_REF",
+       {
+        "Ref": "AlertsSnsTopicRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-AlertsSnsTopicRef"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "AlarmDescription": "DB free local storage low",
+    "ComparisonOperator": "LessThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "First instance",
+      "Value": {
+       "Fn::If": [
+        "AURORA_SELECTED",
+        {
+         "Ref": "AuroraDBFirstInstance"
+        },
+        {
+         "Ref": "RdsDBFirstInstance"
+        }
+       ]
+      }
+     },
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Name": "Second instance",
+        "Value": {
+         "Ref": "AuroraDBSecondInstance"
+        }
+       },
+       {
+        "Fn::If": [
+         "CREATE_REPLICA",
+         {
+          "Name": "Second instance",
+          "Value": {
+           "Ref": "RdsDBReplicaForFirstInstance"
+          }
+         },
+         {
+          "Ref": "AWS::NoValue"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "EvaluationPeriods": "5",
+    "MetricName": "FreeLocalStorage",
+    "Namespace": "AWS/RDS",
+    "Period": "60",
+    "Statistic": "Average",
+    "Threshold": "5368709120",
+    "TreatMissingData": "notBreaching",
+    "Unit": "Bytes"
+   },
+   "Type": "AWS::CloudWatch::Alarm"
+  },
+  "FreeableMemoryAlarm": {
+   "Properties": {
+    "ActionsEnabled": true,
+    "AlarmActions": [
+     {
+      "Fn::If": [
+       "CUSTOM_ALERT_SNS_REF",
+       {
+        "Ref": "AlertsSnsTopicRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-AlertsSnsTopicRef"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "AlarmDescription": "DB freeable memory low",
+    "ComparisonOperator": "LessThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "First instance",
+      "Value": {
+       "Fn::If": [
+        "AURORA_SELECTED",
+        {
+         "Ref": "AuroraDBFirstInstance"
+        },
+        {
+         "Ref": "RdsDBFirstInstance"
+        }
+       ]
+      }
+     },
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Name": "Second instance",
+        "Value": {
+         "Ref": "AuroraDBSecondInstance"
+        }
+       },
+       {
+        "Fn::If": [
+         "CREATE_REPLICA",
+         {
+          "Name": "Second instance",
+          "Value": {
+           "Ref": "RdsDBReplicaForFirstInstance"
+          }
+         },
+         {
+          "Ref": "AWS::NoValue"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "EvaluationPeriods": "5",
+    "MetricName": "FreeableMemory",
+    "Namespace": "AWS/RDS",
+    "Period": "60",
+    "Statistic": "Average",
+    "Threshold": "10485760",
+    "TreatMissingData": "notBreaching",
+    "Unit": "Bytes"
+   },
+   "Type": "AWS::CloudWatch::Alarm"
+  },
+  "InstanceEventSubscription": {
+   "Properties": {
+    "EventCategories": [
+     "availability",
+     "configuration change",
+     "deletion",
+     "failover",
+     "failure",
+     "maintenance",
+     "notification",
+     "recovery"
+    ],
+    "SnsTopicArn": {
+     "Fn::If": [
+      "CUSTOM_ALERT_SNS_REF",
+      {
+       "Ref": "AlertsSnsTopicRef"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-AlertsSnsTopicRef"
+         ]
+        ]
+       }
+      }
+     ]
+    },
+    "SourceIds": [
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Ref": "AuroraDBFirstInstance"
+       },
+       {
+        "Ref": "RdsDBFirstInstance"
+       }
+      ]
+     },
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Ref": "AuroraDBSecondInstance"
+       },
+       {
+        "Fn::If": [
+         "CREATE_REPLICA",
+         {
+          "Ref": "RdsDBReplicaForFirstInstance"
+         },
+         {
+          "Ref": "AWS::NoValue"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "SourceType": "db-instance"
+   },
+   "Type": "AWS::RDS::EventSubscription"
+  },
+  "KMSCMK": {
+   "DeletionPolicy": "Retain",
+   "Properties": {
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:root"
+        }
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:CreateGrant",
+        "kms:ListGrants",
+        "kms:DescribeKey"
+       ],
+       "Condition": {
+        "StringEquals": {
+         "kms:CallerAccount": {
+          "Ref": "AWS::AccountId"
+         },
+         "kms:ViaService": {
+          "Fn::Sub": "rds.${AWS::Region}.amazonaws.com"
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": "*",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Type": "AWS::KMS::Key"
+  },
+  "MaxUsedTxIDsAlarm": {
+   "Properties": {
+    "ActionsEnabled": true,
+    "AlarmActions": [
+     {
+      "Fn::If": [
+       "CUSTOM_ALERT_SNS_REF",
+       {
+        "Ref": "AlertsSnsTopicRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-AlertsSnsTopicRef"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "AlarmDescription": "DB maximum used transaction IDs high",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "First instance",
+      "Value": {
+       "Fn::If": [
+        "AURORA_SELECTED",
+        {
+         "Ref": "AuroraDBFirstInstance"
+        },
+        {
+         "Ref": "RdsDBFirstInstance"
+        }
+       ]
+      }
+     },
+     {
+      "Fn::If": [
+       "AURORA_SELECTED",
+       {
+        "Name": "Second instance",
+        "Value": {
+         "Ref": "AuroraDBSecondInstance"
+        }
+       },
+       {
+        "Fn::If": [
+         "CREATE_REPLICA",
+         {
+          "Name": "Second instance",
+          "Value": {
+           "Ref": "RdsDBReplicaForFirstInstance"
+          }
+         },
+         {
+          "Ref": "AWS::NoValue"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "EvaluationPeriods": "5",
+    "MetricName": "MaximumUsedTransactionIDs",
+    "Namespace": "AWS/RDS",
+    "Period": "60",
+    "Statistic": "Average",
+    "Threshold": "600000000",
+    "TreatMissingData": "notBreaching",
+    "Unit": "Count"
+   },
+   "Type": "AWS::CloudWatch::Alarm"
+  },
+  "MonitoringIAMRole": {
+   "Condition": "IS_PROD",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "monitoring.rds.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+    ],
+    "Path": "/"
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "RdsDBFirstInstance": {
+   "Condition": "RDS_SELECTED",
+   "DeletionPolicy": "Snapshot",
+   "Properties": {
+    "AllocatedStorage": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      {
+       "Ref": "AllocatedStorageSize"
+      }
+     ]
+    },
+    "AutoMinorVersionUpgrade": {
+     "Fn::If": [
+      "IS_PROD",
+      false,
+      true
+     ]
+    },
+    "BackupRetentionPeriod": {
+     "Fn::If": [
+      "IS_PROD",
+      35,
+      2
+     ]
+    },
+    "CopyTagsToSnapshot": true,
+    "DBInstanceClass": {
+     "Ref": "InstanceClass"
+    },
+    "DBParameterGroupName": {
+     "Ref": "DBParamGroup"
+    },
+    "DBSnapshotIdentifier": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "SnaphotId"
+      },
+      {
+       "Ref": "AWS::NoValue"
+      }
+     ]
+    },
+    "DBSubnetGroupName": {
+     "Ref": "DbSubnetGroup"
+    },
+    "DeletionProtection": false,
+    "EnableIAMDatabaseAuthentication": true,
+    "EnablePerformanceInsights": true,
+    "Engine": "postgres",
+    "EngineVersion": {
+     "Ref": "PostgresEngineVersion"
+    },
+    "KmsKeyId": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      {
+       "Ref": "KMSCMK"
+      }
+     ]
+    },
+    "MasterUserPassword": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      {
+       "Fn::Join": [
+        "",
+        [
+         "{{resolve:secretsmanager:",
+         {
+          "Ref": "DbMasterSecret"
+         },
+         ":SecretString:password}}"
+        ]
+       ]
+      }
+     ]
+    },
+    "MasterUsername": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      {
+       "Fn::Join": [
+        "",
+        [
+         "{{resolve:secretsmanager:",
+         {
+          "Ref": "DbMasterSecret"
+         },
+         ":SecretString:username}}"
+        ]
+       ]
+      }
+     ]
+    },
+    "MonitoringInterval": {
+     "Fn::If": [
+      "IS_PROD",
+      1,
+      0
+     ]
+    },
+    "MonitoringRoleArn": {
+     "Fn::If": [
+      "IS_PROD",
+      {
+       "Fn::GetAtt": [
+        "MonitoringIAMRole",
+        "Arn"
+       ]
+      },
+      {
+       "Ref": "AWS::NoValue"
+      }
+     ]
+    },
+    "MultiAZ": {
+     "Fn::If": [
+      "IS_PROD",
+      true,
+      false
+     ]
+    },
+    "PerformanceInsightsKMSKeyId": {
+     "Ref": "KMSCMK"
+    },
+    "PerformanceInsightsRetentionPeriod": {
+     "Fn::If": [
+      "IS_PROD",
+      731,
+      7
+     ]
+    },
+    "PubliclyAccessible": false,
+    "StorageEncrypted": {
+     "Fn::If": [
+      "USE_SNAPSHOT",
+      {
+       "Ref": "AWS::NoValue"
+      },
+      true
+     ]
+    },
+    "StorageType": "gp2",
+    "VPCSecurityGroups": [
+     {
+      "Fn::If": [
+       "CUSTOM_LOCAL_INCOMMING_CONNECTIONS_SG",
+       {
+        "Ref": "LocalIncomingConnectionSecurityGroupId"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-LocalIncomingConnectionSecurityGroupId"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "Type": "AWS::RDS::DBInstance",
+   "UpdateReplacePolicy": "Snapshot"
+  },
+  "RdsDBReplicaForFirstInstance": {
+   "Condition": "CREATE_REPLICA",
+   "Properties": {
+    "DBInstanceClass": {
+     "Ref": "InstanceClass"
+    },
+    "Engine": "postgres",
+    "SourceDBInstanceIdentifier": {
+     "Ref": "RdsDBFirstInstance"
+    },
+    "StorageType": "gp2"
+   },
+   "Type": "AWS::RDS::DBInstance"
+  },
+  "SecretAuroraClusterAttachment": {
+   "Condition": "AURORA_SELECTED",
+   "Properties": {
+    "SecretId": {
+     "Ref": "DbMasterSecret"
+    },
+    "TargetId": {
+     "Ref": "AuroraDBCluster"
+    },
+    "TargetType": "AWS::RDS::DBCluster"
+   },
+   "Type": "AWS::SecretsManager::SecretTargetAttachment"
+  },
+  "SecretRdsInstanceAttachment": {
+   "Condition": "RDS_SELECTED",
+   "Properties": {
+    "SecretId": {
+     "Ref": "DbMasterSecret"
+    },
+    "TargetId": {
+     "Ref": "RdsDBFirstInstance"
+    },
+    "TargetType": "AWS::RDS::DBInstance"
+   },
+   "Type": "AWS::SecretsManager::SecretTargetAttachment"
+  }
+ }
+}

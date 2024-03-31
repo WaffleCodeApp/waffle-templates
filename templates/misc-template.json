@@ -1,0 +1,120 @@
+{
+ "Outputs": {
+  "AlertsSnsTopicRef": {
+   "Description": "The Ref of the alerts sns",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AlertsSnsTopicRef"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "SnsTopic"
+   }
+  },
+  "DeploymentSecretArn": {
+   "Description": "The arn of the deployment_secret",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-DeploymentSecretArn"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "Secret"
+   }
+  },
+  "GithubSecretArn": {
+   "Description": "The arn of the github_secret",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-GithubSecretArn"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "GithubSecret"
+   }
+  }
+ },
+ "Parameters": {
+  "DeploymentId": {
+   "Description": "deployment_id",
+   "Type": "String"
+  },
+  "EmailNotificationList": {
+   "Description": "The Email notification list is used to configure a SNS topic for sending cloudwatch alarm and SQS Event notifications",
+   "Type": "String"
+  }
+ },
+ "Resources": {
+  "GithubSecret": {
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-github"
+      ]
+     ]
+    },
+    "SecretString": "{\"token\":\"\"}"
+   },
+   "Type": "AWS::SecretsManager::Secret"
+  },
+  "Secret": {
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-generic"
+      ]
+     ]
+    },
+    "SecretString": "{}"
+   },
+   "Type": "AWS::SecretsManager::Secret"
+  },
+  "SnsTopic": {
+   "Properties": {
+    "Subscription": [
+     {
+      "Endpoint": {
+       "Ref": "EmailNotificationList"
+      },
+      "Protocol": "email"
+     }
+    ]
+   },
+   "Type": "AWS::SNS::Topic"
+  }
+ }
+}

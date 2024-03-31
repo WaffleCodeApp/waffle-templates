@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  # this is the container that vscode will use as the coding environment
+  c:
+    build:
+      context: .
+    tty: true
+
+    volumes:
+      - ../..:/workspaces:cached
+
+    # prevents things from shutting down after the process ends.
+    command: sleep infinity
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
