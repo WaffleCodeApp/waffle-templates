@@ -4,7 +4,8 @@ This repository is a set of infrastructure templates for AWS CloudFormation to h
 
 ## The intention of this project
 
-The goal of this project is to enable businesses to start web application development projects with a small team that doesn't have devops engineering experience, and scale up without having to write the backend codebase. The idea is to start with being compliant and audit-ready for the first-line of code using default industry standards and opinionated practices. And only hire devops personnel once the project requires customization to be cost efficient at large-scale.
+
+The goal of this project is to enable businesses to start web application development projects with a small team that doesn't have devops engineering experience. The idea is to start with being compliant and audit-ready from the first-line of code using default industry standards and opinionated practices. And only hire devops personnel once the project requires customization to be cost efficient at large-scale.
 
 ## What are these templates?
 
@@ -21,7 +22,15 @@ The templates cover the following areas:
 - CICD pipelines for deploying containerized backend services.
 - CICD pipelines for deploying serverless functions.
 
-The industr defaults and opinionated practices cover:
+The templates follow SOC II requirements:
+- Implements least privilege approach for backend services’ communication over the internet.
+- Implements least privilege approach secret management.
+- Enables infrastructure level change management using infrastructure as code and related logging.
+- Enables source code level change management and deployment approvals.
+- Automated database backups
+- Monitoring and alarms
+
+The industry defaults and opinionated practices cover:
 - Secret handling solutions for databases and backend services.
 - Private networking security settings.
 - API key plans.
