@@ -408,11 +408,17 @@
        "Statement": [
         {
          "Action": [
-          "codebuild:*",
-          "iam:PassRole"
+          "codebuild:*"
          ],
          "Effect": "Allow",
          "Resource": "*"
+        },
+        {
+            "Action": [
+             "iam:PassRole"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
         },
         {
          "Action": [
