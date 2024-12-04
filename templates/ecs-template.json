@@ -1156,11 +1156,24 @@
              "sns:*",
              "cloudformation:*",
              "rds:*",
-             "sqs:*",
-             "iam:PassRole"
+             "sqs:*"
             ],
             "Effect": "Allow",
             "Resource": "*"
+           },
+           {
+            "Action": [
+             "iam:PassRole"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                {
+                    "Fn::GetAtt": [
+                     "CodeBuildServiceRole",
+                     "Arn"
+                    ]
+                }
+              ]
            },
            {
             "Action": [
