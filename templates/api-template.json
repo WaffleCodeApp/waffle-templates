@@ -1,4 +1,14 @@
 {
+ "Conditions": {
+  "EXCLUDE_STAGE_FROM_PATH": {
+   "Fn::Equals": [
+    {
+     "Ref": "ExcludeStageFromPath"
+    },
+    "True"
+   ]
+  }
+ },
  "Outputs": {
   "ApiHost": {
    "Export": {
@@ -99,6 +109,15 @@
    "Description": "deployment_id",
    "Type": "String"
   },
+  "ExcludeStageFromPath": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "False",
+   "Description": "If enabled then the /Prod will be excluded from the path",
+   "Type": "String"
+  },
   "FullDomainName": {
    "Description": "like dev.example.com",
    "Type": "String"
@@ -141,6 +160,15 @@
     },
     "RestApiId": {
      "Ref": "Api"
+    },
+    "Stage": {
+     "Fn::If": [
+      "EXCLUDE_STAGE_FROM_PATH",
+      "Prod",
+      {
+       "Ref": "AWS::NoValue"
+      }
+     ]
     }
    },
    "Type": "AWS::ApiGateway::BasePathMapping"
@@ -259,7 +287,7 @@
   },
   "DeploymentProd": {
    "DependsOn": [
-    "RootMethod"
+    "Api"
    ],
    "Properties": {
     "RestApiId": {
@@ -302,28 +330,21 @@
     },
     "ManagedPolicyArns": [
      "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
-    ]
-   },
-   "Type": "AWS::IAM::Role"
-  },
-  "RootMethod": {
-   "Properties": {
-    "AuthorizationType": "NONE",
-    "HttpMethod": "ANY",
-    "Integration": {
-     "Type": "MOCK"
-    },
-    "ResourceId": {
-     "Fn::GetAtt": [
-      "Api",
-      "RootResourceId"
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-api-LogRole"
+      ]
      ]
-    },
-    "RestApiId": {
-     "Ref": "Api"
     }
    },
-   "Type": "AWS::ApiGateway::Method"
+   "Type": "AWS::IAM::Role"
   }
  }
 }

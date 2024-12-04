@@ -1,5 +1,33 @@
 {
  "Conditions": {
+  "ALARMS_ENABLED": {
+   "Fn::Equals": [
+    {
+     "Ref": "AlarmsEnabled"
+    },
+    "True"
+   ]
+  },
+  "AURORA_ALARMS_ENABLED": {
+   "Fn::And": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AlarmsEnabled"
+      },
+      "True"
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "DBType"
+      },
+      "aurora"
+     ]
+    }
+   ]
+  },
   "AURORA_SELECTED": {
    "Fn::Equals": [
     {
@@ -76,12 +104,12 @@
     }
    ]
   },
-  "IS_PROD": {
+  "MULTI_AZ": {
    "Fn::Equals": [
     {
-     "Ref": "DeploymentType"
+     "Ref": "MultiAZ"
     },
-    "PROD"
+    "True"
    ]
   },
   "RDS_SELECTED": {
@@ -128,17 +156,51 @@
    "Value": {
     "Ref": "DbMasterSecret"
    }
+  },
+  "StackExists": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-db-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "DatabaseId"
+       }
+      ]
+     ]
+    }
+   },
+   "Value": "True"
   }
  },
  "Parameters": {
+  "AlarmsEnabled": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "(optional) If system alarms should be set up.",
+   "Type": "String"
+  },
   "AlertsSnsTopicRef": {
    "Default": "",
    "Description": "The ref of the sns topic to deliver alarms",
    "Type": "String"
   },
   "AllocatedStorageSize": {
-   "Default": "5",
+   "Default": "6",
    "Description": "Allocated storage size",
+   "Type": "String"
+  },
+  "BackupRetention": {
+   "Default": "35",
+   "Description": "(optional) Days how long automated backups should be retained",
    "Type": "String"
   },
   "CreateReplica": {
@@ -163,10 +225,6 @@
    "Description": "deployment_id",
    "Type": "String"
   },
-  "DeploymentType": {
-   "Description": "[ DEV | PROD ]",
-   "Type": "String"
-  },
   "Family": {
    "Default": "aurora-postgresql15",
    "Description": "DB family for RDS or Aurora",
@@ -179,7 +237,21 @@
   },
   "LocalIncomingConnectionSecurityGroupId": {
    "Default": "",
-   "Description": "Local inbound enabled SG (optional)",
+   "Description": "(optional) Local inbound enabled SG",
+   "Type": "String"
+  },
+  "LogRetentionDays": {
+   "Default": "365",
+   "Description": "(optional) Days how long logs to be retained.",
+   "Type": "String"
+  },
+  "MultiAZ": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "Boolean to setup replica creation for RDS",
    "Type": "String"
   },
   "PostgresEngineVersion": {
@@ -189,12 +261,12 @@
   },
   "PrimaryPrivateSubnetRef": {
    "Default": "",
-   "Description": "The primary private subnet in the VPC (optional)",
+   "Description": "(optional) The primary private subnet in the VPC",
    "Type": "String"
   },
   "SecondaryPrivateSubnetRef": {
    "Default": "",
-   "Description": "The secondary private subnet in the VPC (optional)",
+   "Description": "(optional) The secondary private subnet in the VPC",
    "Type": "String"
   },
   "SnaphotId": {
@@ -204,39 +276,13 @@
   },
   "VPCRef": {
    "Default": "",
-   "Description": "The VPC (optional)",
+   "Description": "(optional) The VPC",
    "Type": "String"
   }
  },
  "Resources": {
-  "AlbDnsNameParameter": {
-   "Properties": {
-    "Description": "The name of the secret with the credentials of the db",
-    "Name": {
-     "Fn::Join": [
-      "",
-      [
-       "/",
-       {
-        "Ref": "DeploymentId"
-       },
-       "/db/",
-       {
-        "Ref": "DatabaseId"
-       },
-       "/secretName"
-      ]
-     ]
-    },
-    "Type": "String",
-    "Value": {
-     "Ref": "DbMasterSecret"
-    }
-   },
-   "Type": "AWS::SSM::Parameter"
-  },
   "AuroraClusterEventSubscription": {
-   "Condition": "AURORA_SELECTED",
+   "Condition": "AURORA_ALARMS_ENABLED",
    "Properties": {
     "EventCategories": [
      "failover",
@@ -286,11 +332,7 @@
    "DeletionPolicy": "Snapshot",
    "Properties": {
     "BackupRetentionPeriod": {
-     "Fn::If": [
-      "IS_PROD",
-      35,
-      2
-     ]
+     "Ref": "BackupRetention"
     },
     "DBClusterParameterGroupName": {
      "Ref": "DBClusterParamGroup"
@@ -409,7 +451,7 @@
    "Properties": {
     "AutoMinorVersionUpgrade": {
      "Fn::If": [
-      "IS_PROD",
+      "AURORA_ALARMS_ENABLED",
       false,
       true
      ]
@@ -433,14 +475,14 @@
     },
     "MonitoringInterval": {
      "Fn::If": [
-      "IS_PROD",
+      "AURORA_ALARMS_ENABLED",
       1,
       0
      ]
     },
     "MonitoringRoleArn": {
      "Fn::If": [
-      "IS_PROD",
+      "AURORA_ALARMS_ENABLED",
       {
        "Fn::GetAtt": [
         "MonitoringIAMRole",
@@ -457,8 +499,12 @@
     },
     "PerformanceInsightsRetentionPeriod": {
      "Fn::If": [
-      "IS_PROD",
-      731,
+      "AURORA_ALARMS_ENABLED",
+      {
+       "Default": "365",
+       "Description": "(optional) Days how long logs to be retained.",
+       "Type": "String"
+      },
       7
      ]
     },
@@ -472,7 +518,7 @@
    "Properties": {
     "AutoMinorVersionUpgrade": {
      "Fn::If": [
-      "IS_PROD",
+      "AURORA_ALARMS_ENABLED",
       false,
       true
      ]
@@ -496,14 +542,14 @@
     },
     "MonitoringInterval": {
      "Fn::If": [
-      "IS_PROD",
+      "AURORA_ALARMS_ENABLED",
       1,
       0
      ]
     },
     "MonitoringRoleArn": {
      "Fn::If": [
-      "IS_PROD",
+      "AURORA_ALARMS_ENABLED",
       {
        "Fn::GetAtt": [
         "MonitoringIAMRole",
@@ -519,17 +565,14 @@
      "Ref": "KMSCMK"
     },
     "PerformanceInsightsRetentionPeriod": {
-     "Fn::If": [
-      "IS_PROD",
-      731,
-      7
-     ]
+     "Ref": "LogRetentionDays"
     },
     "PubliclyAccessible": false
    },
    "Type": "AWS::RDS::DBInstance"
   },
   "CPUUtilizationAlarm": {
+   "Condition": "ALARMS_ENABLED",
    "Properties": {
     "ActionsEnabled": true,
     "AlarmActions": [
@@ -598,10 +641,10 @@
       ]
      }
     ],
-    "EvaluationPeriods": "5",
+    "EvaluationPeriods": 5,
     "MetricName": "CPUUtilization",
     "Namespace": "AWS/RDS",
-    "Period": "60",
+    "Period": 60,
     "Statistic": "Maximum",
     "Threshold": "80",
     "TreatMissingData": "notBreaching",
@@ -621,6 +664,32 @@
     }
    },
    "Type": "AWS::RDS::DBClusterParameterGroup"
+  },
+  "DBCredentialsParameter": {
+   "Properties": {
+    "Description": "The name of the secret with the credentials of the db",
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "/",
+       {
+        "Ref": "DeploymentId"
+       },
+       "/db/",
+       {
+        "Ref": "DatabaseId"
+       },
+       "/secretName"
+      ]
+     ]
+    },
+    "Type": "String",
+    "Value": {
+     "Ref": "DbMasterSecret"
+    }
+   },
+   "Type": "AWS::SSM::Parameter"
   },
   "DBParamGroup": {
    "Properties": {
@@ -651,7 +720,7 @@
    "Type": "AWS::RDS::DBParameterGroup"
   },
   "DBParameterGroupEventSubscription": {
-   "Condition": "AURORA_SELECTED",
+   "Condition": "AURORA_ALARMS_ENABLED",
    "Properties": {
     "EventCategories": [
      "configuration change"
@@ -771,6 +840,7 @@
    "Type": "AWS::RDS::DBSubnetGroup"
   },
   "FreeLocalStorageAlarm": {
+   "Condition": "ALARMS_ENABLED",
    "Properties": {
     "ActionsEnabled": true,
     "AlarmActions": [
@@ -839,10 +909,10 @@
       ]
      }
     ],
-    "EvaluationPeriods": "5",
+    "EvaluationPeriods": 1,
     "MetricName": "FreeLocalStorage",
     "Namespace": "AWS/RDS",
-    "Period": "60",
+    "Period": 60,
     "Statistic": "Average",
     "Threshold": "5368709120",
     "TreatMissingData": "notBreaching",
@@ -851,6 +921,7 @@
    "Type": "AWS::CloudWatch::Alarm"
   },
   "FreeableMemoryAlarm": {
+   "Condition": "ALARMS_ENABLED",
    "Properties": {
     "ActionsEnabled": true,
     "AlarmActions": [
@@ -919,10 +990,10 @@
       ]
      }
     ],
-    "EvaluationPeriods": "5",
+    "EvaluationPeriods": 1,
     "MetricName": "FreeableMemory",
     "Namespace": "AWS/RDS",
-    "Period": "60",
+    "Period": 60,
     "Statistic": "Average",
     "Threshold": "10485760",
     "TreatMissingData": "notBreaching",
@@ -931,6 +1002,7 @@
    "Type": "AWS::CloudWatch::Alarm"
   },
   "InstanceEventSubscription": {
+   "Condition": "AURORA_ALARMS_ENABLED",
    "Properties": {
     "EventCategories": [
      "availability",
@@ -1045,6 +1117,7 @@
    "Type": "AWS::KMS::Key"
   },
   "MaxUsedTxIDsAlarm": {
+   "Condition": "ALARMS_ENABLED",
    "Properties": {
     "ActionsEnabled": true,
     "AlarmActions": [
@@ -1113,10 +1186,10 @@
       ]
      }
     ],
-    "EvaluationPeriods": "5",
+    "EvaluationPeriods": 5,
     "MetricName": "MaximumUsedTransactionIDs",
     "Namespace": "AWS/RDS",
-    "Period": "60",
+    "Period": 60,
     "Statistic": "Average",
     "Threshold": "600000000",
     "TreatMissingData": "notBreaching",
@@ -1125,7 +1198,7 @@
    "Type": "AWS::CloudWatch::Alarm"
   },
   "MonitoringIAMRole": {
-   "Condition": "IS_PROD",
+   "Condition": "ALARMS_ENABLED",
    "Properties": {
     "AssumeRolePolicyDocument": {
      "Statement": [
@@ -1145,7 +1218,19 @@
     "ManagedPolicyArns": [
      "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
     ],
-    "Path": "/"
+    "Path": "/",
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-db-MonitoringRole"
+      ]
+     ]
+    }
    },
    "Type": "AWS::IAM::Role"
   },
@@ -1164,19 +1249,9 @@
       }
      ]
     },
-    "AutoMinorVersionUpgrade": {
-     "Fn::If": [
-      "IS_PROD",
-      false,
-      true
-     ]
-    },
+    "AutoMinorVersionUpgrade": false,
     "BackupRetentionPeriod": {
-     "Fn::If": [
-      "IS_PROD",
-      35,
-      2
-     ]
+     "Ref": "BackupRetention"
     },
     "CopyTagsToSnapshot": true,
     "DBInstanceClass": {
@@ -1259,14 +1334,14 @@
     },
     "MonitoringInterval": {
      "Fn::If": [
-      "IS_PROD",
+      "ALARMS_ENABLED",
       1,
       0
      ]
     },
     "MonitoringRoleArn": {
      "Fn::If": [
-      "IS_PROD",
+      "ALARMS_ENABLED",
       {
        "Fn::GetAtt": [
         "MonitoringIAMRole",
@@ -1280,7 +1355,7 @@
     },
     "MultiAZ": {
      "Fn::If": [
-      "IS_PROD",
+      "MULTI_AZ",
       true,
       false
      ]
@@ -1289,11 +1364,7 @@
      "Ref": "KMSCMK"
     },
     "PerformanceInsightsRetentionPeriod": {
-     "Fn::If": [
-      "IS_PROD",
-      731,
-      7
-     ]
+     "Ref": "LogRetentionDays"
     },
     "PubliclyAccessible": false,
     "StorageEncrypted": {

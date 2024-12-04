@@ -1,0 +1,48 @@
+{
+ "Outputs": {
+  "AlertsSnsTopicRef": {
+   "Description": "The Ref of the alerts sns",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-AlertsSnsTopicRef"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Ref": "SnsTopic"
+   }
+  }
+ },
+ "Parameters": {
+  "DeploymentId": {
+   "Description": "deployment_id",
+   "Type": "String"
+  },
+  "EmailNotificationList": {
+   "Description": "The Email notification list is used to configure a SNS topic for sending cloudwatch alarm and SQS Event notifications",
+   "Type": "String"
+  }
+ },
+ "Resources": {
+  "SnsTopic": {
+   "Properties": {
+    "Subscription": [
+     {
+      "Endpoint": {
+       "Ref": "EmailNotificationList"
+      },
+      "Protocol": "email"
+     }
+    ]
+   },
+   "Type": "AWS::SNS::Topic"
+  }
+ }
+}

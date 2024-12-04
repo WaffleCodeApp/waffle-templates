@@ -1,4 +1,14 @@
 {
+ "Conditions": {
+  "ALLOW_ADMIN_CREATE_USER_ONLY": {
+   "Fn::Equals": [
+    {
+     "Ref": "AllowAdminCreateUserOnly"
+    },
+    "True"
+   ]
+  }
+ },
  "Outputs": {
   "AuthIdentityPoolRef": {
    "Description": "AuthIdentityPoolRef",
@@ -99,13 +109,13 @@
    },
    "Value": {
     "Fn::GetAtt": [
-     "AuthMFAUserPool",
+     "MFAUserPool",
      "Arn"
     ]
    }
   },
   "AuthUserPoolClientWebRef": {
-   "Description": "TAuthUserPoolClientWebRef",
+   "Description": "AuthUserPoolClientWebRef",
    "Export": {
     "Name": {
      "Fn::Join": [
@@ -120,7 +130,7 @@
     }
    },
    "Value": {
-    "Ref": "AuthUserPoolClientWeb"
+    "Ref": "UserPoolClientWeb"
    }
   },
   "AuthUserPoolRef": {
@@ -139,21 +149,18 @@
     }
    },
    "Value": {
-    "Ref": "AuthMFAUserPool"
+    "Ref": "MFAUserPool"
    }
   }
  },
  "Parameters": {
-  "AuthUserAuthenticationSMSText": {
-   "Description": "Text to be used in login SMS messages",
-   "Type": "String"
-  },
-  "AuthUserInvitationSMSText": {
-   "Description": "Text to be used in invitation SMS messages",
-   "Type": "String"
-  },
-  "AuthUserVerificationSMSText": {
-   "Description": "Text to be used in verification SMS messages",
+  "AllowAdminCreateUserOnly": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "Only admin can create new users?",
    "Type": "String"
   },
   "DeploymentId": {
@@ -168,11 +175,11 @@
     "CognitoIdentityProviders": [
      {
       "ClientId": {
-       "Ref": "AuthUserPoolClientWeb"
+       "Ref": "UserPoolClientWeb"
       },
       "ProviderName": {
        "Fn::GetAtt": [
-        "AuthMFAUserPool",
+        "MFAUserPool",
         "ProviderName"
        ]
       }
@@ -208,100 +215,6 @@
     }
    },
    "Type": "AWS::Cognito::IdentityPoolRoleAttachment"
-  },
-  "AuthMFAUserPool": {
-   "Properties": {
-    "AdminCreateUserConfig": {
-     "AllowAdminCreateUserOnly": true,
-     "InviteMessageTemplate": {
-      "SMSMessage": {
-       "Ref": "AuthUserInvitationSMSText"
-      }
-     }
-    },
-    "MfaConfiguration": "OFF",
-    "Policies": {
-     "PasswordPolicy": {
-      "MinimumLength": 12,
-      "RequireLowercase": true,
-      "RequireNumbers": true,
-      "RequireSymbols": true,
-      "RequireUppercase": true
-     }
-    },
-    "Schema": [
-     {
-      "Mutable": true,
-      "Name": "phone_number",
-      "Required": true
-     },
-     {
-      "Mutable": true,
-      "Name": "email",
-      "Required": true
-     },
-     {
-      "AttributeDataType": "String",
-      "DeveloperOnlyAttribute": true,
-      "Mutable": true,
-      "Name": "role",
-      "Required": false
-     },
-     {
-       "AttributeDataType": "String",
-       "DeveloperOnlyAttribute": true,
-       "Mutable": true,
-       "Name": "organization",
-       "Required": false
-     },
-     {
-       "AttributeDataType": "String",
-       "DeveloperOnlyAttribute": true,
-       "Mutable": true,
-       "Name": "projects",
-       "Required": false
-     },
-     {
-       "AttributeDataType": "String",
-       "DeveloperOnlyAttribute": true,
-       "Mutable": true,
-       "Name": "customer",
-       "Required": false
-     }
-    ],
-    "SmsAuthenticationMessage": {
-     "Ref": "AuthUserAuthenticationSMSText"
-    },
-    "SmsConfiguration": {
-     "ExternalId": {
-      "Ref": "AWS::AccountId"
-     },
-     "SnsCallerArn": {
-      "Fn::GetAtt": [
-       "AuthSnsRole",
-       "Arn"
-      ]
-     }
-    },
-    "SmsVerificationMessage": {
-     "Ref": "AuthUserVerificationSMSText"
-    },
-    "UserPoolName": {
-     "Fn::Join": [
-      "",
-      [
-       {
-        "Ref": "DeploymentId"
-       },
-       "-users-MFA"
-      ]
-     ]
-    },
-    "UsernameAttributes": [
-     "email"
-    ]
-   },
-   "Type": "AWS::Cognito::UserPool"
   },
   "AuthRole": {
    "Properties": {
@@ -383,7 +296,19 @@
        ]
       }
      }
-    ]
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-authentication-userpool-AuthRole"
+      ]
+     ]
+    }
    },
    "Type": "AWS::IAM::Role"
   },
@@ -430,30 +355,21 @@
        ]
       }
      }
-    ]
-   },
-   "Type": "AWS::IAM::Role"
-  },
-  "AuthUserPoolClientWeb": {
-   "DependsOn": "AuthMFAUserPool",
-   "Properties": {
-    "ClientName": {
+    ],
+    "RoleName": {
      "Fn::Join": [
       "",
       [
+       "Waffle-",
        {
         "Ref": "DeploymentId"
        },
-       "-web-MFA"
+       "-authentication-userpool-SnsRole"
       ]
      ]
-    },
-    "GenerateSecret": false,
-    "UserPoolId": {
-     "Ref": "AuthMFAUserPool"
     }
    },
-   "Type": "AWS::Cognito::UserPoolClient"
+   "Type": "AWS::IAM::Role"
   },
   "AuthUserPoolRole": {
    "Properties": {
@@ -507,9 +423,115 @@
        ]
       }
      }
-    ]
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-authentication-userpool-LambdaRole"
+      ]
+     ]
+    }
    },
    "Type": "AWS::IAM::Role"
+  },
+  "MFAUserPool": {
+   "Properties": {
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": {
+      "Fn::If": [
+       "ALLOW_ADMIN_CREATE_USER_ONLY",
+       true,
+       false
+      ]
+     }
+    },
+    "EnabledMfas": [
+     "SOFTWARE_TOKEN_MFA"
+    ],
+    "MfaConfiguration": "ON",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 12,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": true,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     },
+     {
+      "AttributeDataType": "String",
+      "Mutable": true,
+      "Name": "role",
+      "Required": false
+     },
+     {
+      "AttributeDataType": "String",
+      "Mutable": true,
+      "Name": "organization",
+      "Required": false
+     }
+    ],
+    "UserPoolName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-users"
+      ]
+     ]
+    },
+    "UsernameAttributes": [
+     "email"
+    ]
+   },
+   "Type": "AWS::Cognito::UserPool"
+  },
+  "UserPoolClientWeb": {
+   "DependsOn": "MFAUserPool",
+   "Properties": {
+    "ClientName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-web"
+      ]
+     ]
+    },
+    "GenerateSecret": false,
+    "ReadAttributes": [
+     "email",
+     "email_verified",
+     "name",
+     "picture",
+     "custom:role",
+     "custom:organization"
+    ],
+    "UserPoolId": {
+     "Ref": "MFAUserPool"
+    },
+    "WriteAttributes": [
+     "email",
+     "name",
+     "picture"
+    ]
+   },
+   "Type": "AWS::Cognito::UserPoolClient"
   }
  }
 }

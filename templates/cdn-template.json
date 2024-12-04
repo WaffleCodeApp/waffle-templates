@@ -1,5 +1,13 @@
 {
  "Conditions": {
+  "ALARMS_ENABLED": {
+   "Fn::Equals": [
+    {
+     "Ref": "AlarmsEnabled"
+    },
+    "True"
+   ]
+  },
   "ALT_CERTIFICATE_ARN": {
    "Fn::Not": [
     {
@@ -72,36 +80,12 @@
     }
    ]
   },
-  "CUSTOM_GITHUB_TOKEN_SECRET_NAME": {
-   "Fn::Not": [
-    {
-     "Fn::Equals": [
-      {
-       "Ref": "GithubSecretArn"
-      },
-      ""
-     ]
-    }
-   ]
-  },
   "CUSTOM_IDENTITY_POOL_REF": {
    "Fn::Not": [
     {
      "Fn::Equals": [
       {
        "Ref": "AuthIdentityPoolRef"
-      },
-      ""
-     ]
-    }
-   ]
-  },
-  "CUSTOM_USER_POOL_ARN": {
-   "Fn::Not": [
-    {
-     "Fn::Equals": [
-      {
-       "Ref": "AuthUserPoolArn"
       },
       ""
      ]
@@ -120,14 +104,6 @@
     }
    ]
   },
-  "IS_PROD": {
-   "Fn::Equals": [
-    {
-     "Ref": "DeploymentType"
-    },
-    "PROD"
-   ]
-  },
   "MANUAL_APPROVAL_SELECTED": {
    "Fn::Equals": [
     {
@@ -137,7 +113,38 @@
    ]
   }
  },
+ "Outputs": {
+  "StackExists": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-cdn-cicd-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    }
+   },
+   "Value": "True"
+  }
+ },
  "Parameters": {
+  "AlarmsEnabled": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "(optional) If system alarms should be set up.",
+   "Type": "String"
+  },
   "AltCertificateArn": {
    "Default": "",
    "Description": "(optional) For the cert for the somethingelse.com",
@@ -166,11 +173,6 @@
   "AuthIdentityPoolRef": {
    "Default": "",
    "Description": "(optional) The REF of the user pool",
-   "Type": "String"
-  },
-  "AuthUserPoolArn": {
-   "Default": "",
-   "Description": "(optional) The ARN of the user pool",
    "Type": "String"
   },
   "AuthUserPoolClientWebRef": {
@@ -210,10 +212,6 @@
    "Description": "deployment_id",
    "Type": "String"
   },
-  "DeploymentType": {
-   "Description": "[ DEV | PROD ]",
-   "Type": "String"
-  },
   "FullDomainName": {
    "Description": "like dev.wafflecode.app",
    "Type": "String"
@@ -222,22 +220,22 @@
    "Description": "For the cert for the *.fulldomain",
    "Type": "String"
   },
-  "GithubBranch": {
+  "GitBranch": {
    "Default": "main",
-   "Description": "GitHub branch name to be deployed",
+   "Description": "Git branch name to be deployed",
    "Type": "String"
   },
-  "GithubOwner": {
-   "Description": "Github account name",
+  "GitConnectionArn": {
+   "Description": "CodeStar connection ARN",
    "Type": "String"
   },
-  "GithubRepoName": {
-   "Description": "GitHub repository name",
+  "GitRepositoryId": {
+   "Description": "some-user/my-repo",
    "Type": "String"
   },
-  "GithubSecretArn": {
-   "Default": "",
-   "Description": "(optional) The arn of the github_secret",
+  "LogRetentionDays": {
+   "Default": "365",
+   "Description": "(optional) Days how long logs to be retained.",
    "Type": "String"
   },
   "PipelineId": {
@@ -246,13 +244,13 @@
   },
   "WebHostname": {
    "Default": "www",
-   "Description": "www from www.dev.wafflecode.app",
+   "Description": "Like the 'www' from 'www.dev.wafflecode.app'.",
    "Type": "String"
   }
  },
  "Resources": {
   "ArtifactsBucket": {
-   "DeletionPolicy": "Delete",
+   "DeletionPolicy": "Retain",
    "Properties": {
     "BucketEncryption": {
      "ServerSideEncryptionConfiguration": [
@@ -414,13 +412,6 @@
          "Resource": "*"
         },
         {
-            "Action": [
-             "iam:PassRole"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-        },
-        {
          "Action": [
           "logs:CreateLogStream",
           "logs:FilterLogEvents",
@@ -468,6 +459,13 @@
            ]
           }
          ]
+        },
+        {
+         "Action": [
+          "iam:PassRole"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
         }
        ],
        "Version": "2012-10-17"
@@ -476,21 +474,90 @@
        "Fn::Join": [
         "",
         [
+         "Waffle-CodeBuildService-",
          {
           "Ref": "DeploymentId"
          },
          "-",
          {
           "Ref": "PipelineId"
-         },
-         "-CodeBuildService"
+         }
         ]
        ]
       }
      }
-    ]
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-CodeBuildRole"
+      ]
+     ]
+    }
    },
    "Type": "AWS::IAM::Role"
+  },
+  "CodePipelineExecutionNotificationRule": {
+   "Condition": "ALARMS_ENABLED",
+   "DependsOn": [
+    "Pipeline"
+   ],
+   "Properties": {
+    "DetailType": "FULL",
+    "EventTypeIds": [
+     "codepipeline-pipeline-pipeline-execution-canceled",
+     "codepipeline-pipeline-pipeline-execution-failed",
+     "codepipeline-pipeline-pipeline-execution-resumed",
+     "codepipeline-pipeline-pipeline-execution-started",
+     "codepipeline-pipeline-pipeline-execution-succeeded"
+    ],
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-CodePipelineExecution"
+      ]
+     ]
+    },
+    "Resource": {
+     "Fn::Sub": "arn:aws:codepipeline:${AWS::Region}:${AWS::AccountId}:${Pipeline}"
+    },
+    "Targets": [
+     {
+      "TargetAddress": {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-AlertsSnsTopicRef"
+         ]
+        ]
+       }
+      },
+      "TargetType": "SNS"
+     }
+    ]
+   },
+   "Type": "AWS::CodeStarNotifications::NotificationRule"
   },
   "CodePipelineServiceRole": {
    "Properties": {
@@ -514,33 +581,6 @@
      {
       "PolicyDocument": {
        "Statement": [
-        {
-         "Action": [
-          "codedeploy:CreateDeployment",
-          "codedeploy:GetApplicationRevision",
-          "codedeploy:GetDeployment",
-          "codedeploy:GetDeploymentConfig",
-          "codedeploy:RegisterApplicationRevision"
-         ],
-         "Effect": "Allow",
-         "Resource": "*"
-        },
-        {
-         "Action": [
-          "codebuild:BatchGetBuilds",
-          "codebuild:StartBuild"
-         ],
-         "Effect": "Allow",
-         "Resource": "*"
-        },
-        {
-         "Action": [
-          "lambda:InvokeFunction",
-          "lambda:ListFunctions"
-         ],
-         "Effect": "Allow",
-         "Resource": "*"
-        },
         {
          "Action": [
           "s3:GetObject",
@@ -597,10 +637,42 @@
         },
         {
          "Action": [
-          "iam:PassRole"
+          "codebuild:StartBuild",
+          "codebuild:BatchGetBuilds"
          ],
          "Effect": "Allow",
          "Resource": "*"
+        },
+        {
+         "Action": [
+          "cloudwatch:*",
+          "sns:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "iam:PassRole"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::GetAtt": [
+            "CodeBuildServiceRole",
+            "Arn"
+           ]
+          }
+         ]
+        },
+        {
+         "Action": [
+          "codestar-connections:UseConnection"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Ref": "GitConnectionArn"
+         }
         }
        ],
        "Version": "2012-10-17"
@@ -609,19 +681,35 @@
        "Fn::Join": [
         "",
         [
+         "Waffle-CodePipelineService-",
          {
           "Ref": "DeploymentId"
          },
          "-",
          {
           "Ref": "PipelineId"
-         },
-         "-CodePipelineService"
+         }
         ]
        ]
       }
      }
-    ]
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-CodePipelineRole"
+      ]
+     ]
+    }
    },
    "Type": "AWS::IAM::Role"
   },
@@ -796,13 +884,7 @@
    "Type": "AWS::Route53::RecordSet"
   },
   "LoggingBucket": {
-   "DeletionPolicy": {
-    "Fn::If": [
-     "IS_PROD",
-     "Retain",
-     "Delete"
-    ]
-   },
+   "DeletionPolicy": "Retain",
    "Properties": {
     "BucketEncryption": {
      "ServerSideEncryptionConfiguration": [
@@ -857,6 +939,8 @@
       ]
      ]
     },
+    "PipelineType": "V2",
+    "RestartExecutionOnUpdate": true,
     "RoleArn": {
      "Fn::GetAtt": [
       "CodePipelineServiceRole",
@@ -869,50 +953,19 @@
        {
         "ActionTypeId": {
          "Category": "Source",
-         "Owner": "ThirdParty",
-         "Provider": "GitHub",
+         "Owner": "AWS",
+         "Provider": "CodeStarSourceConnection",
          "Version": "1"
         },
         "Configuration": {
-         "Branch": {
-          "Ref": "GithubBranch"
+         "BranchName": {
+          "Ref": "GitBranch"
          },
-         "OAuthToken": {
-          "Fn::Join": [
-           "",
-           [
-            "{{resolve:secretsmanager:",
-            {
-             "Fn::If": [
-              "CUSTOM_GITHUB_TOKEN_SECRET_NAME",
-              {
-               "Ref": "GithubSecretArn"
-              },
-              {
-               "Fn::ImportValue": {
-                "Fn::Join": [
-                 "",
-                 [
-                  {
-                   "Ref": "DeploymentId"
-                  },
-                  "-GithubSecretArn"
-                 ]
-                ]
-               }
-              }
-             ]
-            },
-            ":SecretString:token}}"
-           ]
-          ]
+         "ConnectionArn": {
+          "Ref": "GitConnectionArn"
          },
-         "Owner": {
-          "Ref": "GithubOwner"
-         },
-         "PollForSourceChanges": false,
-         "Repo": {
-          "Ref": "GithubRepoName"
+         "FullRepositoryId": {
+          "Ref": "GitRepositoryId"
          }
         },
         "Name": "BuildSourceAction",
@@ -1019,61 +1072,6 @@
     ]
    },
    "Type": "AWS::CodePipeline::Pipeline"
-  },
-  "PipelineWebhook": {
-   "Properties": {
-    "Authentication": "GITHUB_HMAC",
-    "AuthenticationConfiguration": {
-     "SecretToken": {
-      "Fn::Join": [
-       "",
-       [
-        "{{resolve:secretsmanager:",
-        {
-         "Fn::If": [
-          "CUSTOM_GITHUB_TOKEN_SECRET_NAME",
-          {
-           "Ref": "GithubSecretArn"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-GithubSecretArn"
-             ]
-            ]
-           }
-          }
-         ]
-        },
-        ":SecretString:token}}"
-       ]
-      ]
-     }
-    },
-    "Filters": [
-     {
-      "JsonPath": "$.ref",
-      "MatchEquals": "refs/heads/{Branch}"
-     }
-    ],
-    "RegisterWithThirdParty": true,
-    "TargetAction": "BuildSourceAction",
-    "TargetPipeline": {
-     "Ref": "Pipeline"
-    },
-    "TargetPipelineVersion": {
-     "Fn::GetAtt": [
-      "Pipeline",
-      "Version"
-     ]
-    }
-   },
-   "Type": "AWS::CodePipeline::Webhook"
   },
   "Project": {
    "Properties": {
@@ -1217,7 +1215,7 @@
        }
       },
       {
-       "Name": "REACT_APP_AWS_USER_POOLS_ID",
+       "Name": "REACT_APP_AWS_USER_POOL_ID",
        "Value": {
         "Fn::If": [
          "CUSTOM_USER_POOL_REF",
@@ -1241,7 +1239,7 @@
        }
       },
       {
-       "Name": "REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID",
+       "Name": "REACT_APP_AWS_USER_POOL_WEB_CLIENT_ID",
        "Value": {
         "Fn::If": [
          "CUSTOM_AUTH_WEB_CLIENT",
@@ -1308,13 +1306,7 @@
    "Type": "AWS::CodeBuild::Project"
   },
   "WebBucket": {
-   "DeletionPolicy": {
-    "Fn::If": [
-     "IS_PROD",
-     "Retain",
-     "Delete"
-    ]
-   },
+   "DeletionPolicy": "Retain",
    "Properties": {
     "BucketEncryption": {
      "ServerSideEncryptionConfiguration": [

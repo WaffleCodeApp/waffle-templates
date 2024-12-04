@@ -1343,7 +1343,19 @@
       }
      ]
     },
-    "Path": "/"
+    "Path": "/",
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-VPCFlowLogRole"
+      ]
+     ]
+    }
    },
    "Type": "AWS::IAM::Role"
   },

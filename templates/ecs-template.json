@@ -1,2673 +1,3162 @@
 {
-    "Conditions": {
-     "CUSTOM_ALERT_SNS_REF": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "AlertsSnsTopicRef"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_AUTH_WEB_CLIENT": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "AuthUserPoolClientWebRef"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_DEPLOYMENT_SECRET_ARN": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "DeploymentSecretArn"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_ECR_INCOMMING_CONNECTIONS_SG": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "EcrIncomingConnectionSecurityGroupId"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_GITHUB_TOKEN_SECRET_NAME": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "GithubSecretArn"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "LocalOutgoingConnectionSecurityGroupId"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_NAT_OUTGOING_CONNECTIONS_SG": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "NatOutgoingConnectionSecurityGroupId"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "PrimaryPrivateSubnetRef"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_RESAPI_ID": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "RestApiId"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_ROOT_RESOURCE_ID": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "RootResourceId"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "SecondaryPrivateSubnetRef"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_USER_POOL_ARN": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "AuthUserPoolArn"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_USER_POOL_REF": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "AuthUserPoolRef"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_VPC_CIDR_BLOCK": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "VPCCidrBlock"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "CUSTOM_VPC_REF": {
-      "Fn::Not": [
-       {
-        "Fn::Equals": [
-         {
-          "Ref": "VPCRef"
-         },
-         ""
-        ]
-       }
-      ]
-     },
-     "IS_PROD": {
-      "Fn::Equals": [
-       {
-        "Ref": "DeploymentType"
-       },
-       "PROD"
-      ]
-     },
-     "MANUAL_APPROVAL_SELECTED": {
-      "Fn::Equals": [
-       {
-        "Ref": "CICDManualApproval"
-       },
-       "True"
-      ]
-     }
+ "Conditions": {
+  "ALARMS_ENABLED": {
+   "Fn::Equals": [
+    {
+     "Ref": "AlarmsEnabled"
     },
-    "Outputs": {
-     "AlbDnsName": {
-      "Description": "The hostname of the deployed application load balancer",
-      "Export": {
-       "Name": {
+    "True"
+   ]
+  },
+  "API_KEY_REQUIRED": {
+   "Fn::Equals": [
+    {
+     "Ref": "ApiKeyRequired"
+    },
+    "True"
+   ]
+  },
+  "CUSTOM_ALERT_SNS_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AlertsSnsTopicRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_DEPLOYMENT_SECRET_ARN": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "DeploymentSecretArn"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_ECR_INCOMMING_CONNECTIONS_SG": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "EcrIncomingConnectionSecurityGroupId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "LocalOutgoingConnectionSecurityGroupId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_NAT_OUTGOING_CONNECTIONS_SG": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "NatOutgoingConnectionSecurityGroupId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "PrimaryPrivateSubnetRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_RESAPI_ID": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "RestApiId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_ROOT_RESOURCE_ID": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "RootResourceId"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "SecondaryPrivateSubnetRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_USER_POOL_ARN": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AuthUserPoolArn"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_VPC_CIDR_BLOCK": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "VPCCidrBlock"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "CUSTOM_VPC_REF": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "VPCRef"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "DOCKERFILE_PROVIDED": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "DockerfilePath"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "HEALTH_CHECK_ENABLED": {
+   "Fn::Not": [
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "HealthCheckPath"
+      },
+      ""
+     ]
+    }
+   ]
+  },
+  "IAM_AUTH_REQUIRED": {
+   "Fn::Equals": [
+    {
+     "Ref": "IamAuthRequired"
+    },
+    "True"
+   ]
+  },
+  "MANUAL_APPROVAL_SELECTED": {
+   "Fn::Equals": [
+    {
+     "Ref": "CICDManualApproval"
+    },
+    "True"
+   ]
+  },
+  "MAP_TO_ROOT_PATH": {
+   "Fn::Equals": [
+    {
+     "Ref": "MapToRootPath"
+    },
+    "True"
+   ]
+  }
+ },
+ "Outputs": {
+  "AlbDnsName": {
+   "Description": "The hostname of the deployed application load balancer",
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-AlbDnsName"
+      ]
+     ]
+    }
+   },
+   "Value": {
+    "Fn::GetAtt": [
+     "ApplicationLoadBalancer",
+     "DNSName"
+    ]
+   }
+  },
+  "StackExists": {
+   "Export": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-ecs-cicd-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    }
+   },
+   "Value": "True"
+  }
+ },
+ "Parameters": {
+  "AlarmsEnabled": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "(optional) If system alarms should be set up.",
+   "Type": "String"
+  },
+  "AlertsSnsTopicRef": {
+   "Default": "",
+   "Description": "(optional) The REF of the SNS Topic to send alarms to",
+   "Type": "String"
+  },
+  "ApiKeyRequired": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "(optional) If the HTTP endpoint has to require an API key for authorization.",
+   "Type": "String"
+  },
+  "AuthUserPoolArn": {
+   "Default": "",
+   "Description": "(optional) The ARN of the user pool",
+   "Type": "String"
+  },
+  "BuildEnvVarsJson": {
+   "Default": "{}",
+   "Description": "(optional) A JSON string to be passed to the build script as an environmental variable.",
+   "Type": "String"
+  },
+  "BuildspecPath": {
+   "Default": "",
+   "Description": "Path with filename to the buildspec.yml for CodeBuild",
+   "Type": "String"
+  },
+  "CICDManualApproval": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "True",
+   "Description": "Whether a manual approval step is included in the CICD pipeline before deployment.",
+   "Type": "String"
+  },
+  "CommitID": {
+   "Default": "",
+   "Description": "(optional) GitHub commit ID of that has to be built.  If unspecified it always automatically builds the latest.",
+   "Type": "String"
+  },
+  "DeploymentId": {
+   "Description": "The ID of an existing Waffle deployment to deploy into.",
+   "Type": "String"
+  },
+  "DeploymentSecretArn": {
+   "Default": "",
+   "Description": "(optional) The ARN of the deployment specific secret",
+   "Type": "String"
+  },
+  "DockerfilePath": {
+   "Default": "",
+   "Description": "Path with filename to the Dockerfile for automatically generating the buildspec.yml",
+   "Type": "String"
+  },
+  "EcrIncomingConnectionSecurityGroupId": {
+   "Default": "",
+   "Description": "(optional) Network traffic to ECR enabling Security Group",
+   "Type": "String"
+  },
+  "EcsTaskCPU": {
+   "Default": "256",
+   "Description": "(optional) CPU capacity of a single deployed instance (for example 256 or 1024)",
+   "Type": "String"
+  },
+  "EcsTaskRAM": {
+   "Default": "512",
+   "Description": "(optional) RAM capacity (for example 512 or 3072)",
+   "Type": "String"
+  },
+  "GitBranch": {
+   "Default": "main",
+   "Description": "Git branch name to be deployed",
+   "Type": "String"
+  },
+  "GitConnectionArn": {
+   "Description": "CodeStar connection ARN",
+   "Type": "String"
+  },
+  "GitRepositoryId": {
+   "Description": "some-user/my-repo",
+   "Type": "String"
+  },
+  "HealthCheckPath": {
+   "Default": "/health_check",
+   "Description": "(optional) A URL path that responds with 200 OK on GET requrest for regular health checking",
+   "Type": "String"
+  },
+  "HealthCheckPort": {
+   "Default": "80",
+   "Description": "(optional) A port exposed on the docker container that can be used for health checking",
+   "Type": "String"
+  },
+  "IamAuthRequired": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "False",
+   "Description": "(optional) If the HTTP endpoint has to require IAM authentication.",
+   "Type": "String"
+  },
+  "InstanceCount": {
+   "Description": "Number of desired instances running in paraallel",
+   "MinValue": 0,
+   "Type": "Number"
+  },
+  "LocalOutgoingConnectionSecurityGroupId": {
+   "Default": "",
+   "Description": "(optional) Local outbound traffic enabling Security Group",
+   "Type": "String"
+  },
+  "LogRetentionDays": {
+   "Default": "365",
+   "Description": "(optional) Days how long logs to be retained.",
+   "Type": "String"
+  },
+  "MapToRootPath": {
+   "AllowedValues": [
+    "True",
+    "False"
+   ],
+   "Default": "False",
+   "Description": "If the / path of the api should point to this service. Only works for one service at a time.",
+   "Type": "String"
+  },
+  "NatOutgoingConnectionSecurityGroupId": {
+   "Default": "",
+   "Description": "(optional) NAT outbound traffic enabling Security Group",
+   "Type": "String"
+  },
+  "PipelineId": {
+   "Description": "An ID that will represent the CICD pipeline. Recommended to use a human-understanable name that explains the purpose, like for example 'frontend' or 'adminui'.",
+   "Type": "String"
+  },
+  "PrimaryPrivateSubnetRef": {
+   "Default": "",
+   "Description": "(optional) The primary private subnet in the VPC",
+   "Type": "String"
+  },
+  "RestApiId": {
+   "Default": "",
+   "Description": "(optional) The ref of the API Gateway to deploy to",
+   "Type": "String"
+  },
+  "RootResourceId": {
+   "Default": "",
+   "Description": "(optional) The ID of the API GW resource to deploy the new HTTP endpoint resources as children",
+   "Type": "String"
+  },
+  "RuntimeJson": {
+   "Default": "{}",
+   "Description": "(optional) A JSON that will be passed to the running instance as an environmental variable",
+   "Type": "String"
+  },
+  "SecondaryPrivateSubnetRef": {
+   "Default": "",
+   "Description": "(optional) The secondary private subnet in the VPC",
+   "Type": "String"
+  },
+  "ServicePort": {
+   "Default": "80",
+   "Description": "(optional) The port exposed on the docker container",
+   "Type": "String"
+  },
+  "VPCCidrBlock": {
+   "Default": "",
+   "Description": "(optional) The VPC's CIDR block (IP mask)",
+   "Type": "String"
+  },
+  "VPCRef": {
+   "Default": "",
+   "Description": "(optional) The REF of the VPC to deploy to",
+   "Type": "String"
+  }
+ },
+ "Resources": {
+  "ALBListener": {
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "ALBTargetGroup"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "ApplicationLoadBalancer"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Type": "AWS::ElasticLoadBalancingV2::Listener"
+  },
+  "ALBSecurityGroup": {
+   "Properties": {
+    "GroupDescription": "From backend SG, trough ALB, to instance",
+    "GroupName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       " for ALB"
+      ]
+     ]
+    },
+    "SecurityGroupIngress": [
+     {
+      "IpProtocol": "-1",
+      "SourceSecurityGroupId": {
+       "Fn::If": [
+        "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG",
+        {
+         "Ref": "LocalOutgoingConnectionSecurityGroupId"
+        },
+        {
+         "Fn::ImportValue": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-LocalOutgoingConnectionSecurityGroupId"
+           ]
+          ]
+         }
+        }
+       ]
+      }
+     },
+     {
+      "IpProtocol": "-1",
+      "SourceSecurityGroupId": {
+       "Ref": "AccessSecurityGroup"
+      }
+     },
+     {
+      "CidrIp": {
+       "Fn::If": [
+        "CUSTOM_VPC_CIDR_BLOCK",
+        {
+         "Ref": "VPCCidrBlock"
+        },
+        {
+         "Fn::ImportValue": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-VPCCidrBlock"
+           ]
+          ]
+         }
+        }
+       ]
+      },
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Fn::If": [
+      "CUSTOM_VPC_REF",
+      {
+       "Ref": "VPCRef"
+      },
+      {
+       "Fn::ImportValue": {
         "Fn::Join": [
          "",
          [
           {
            "Ref": "DeploymentId"
           },
-          "-",
-          {
-           "Ref": "PipelineId"
-          },
-          "-AlbDnsName"
+          "-VPCRef"
          ]
         ]
        }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::EC2::SecurityGroup"
+  },
+  "ALBTargetGroup": {
+   "Properties": {
+    "HealthCheckIntervalSeconds": "80",
+    "HealthCheckPath": "/health_check",
+    "HealthCheckProtocol": "HTTP",
+    "HealthCheckTimeoutSeconds": "50",
+    "HealthyThresholdCount": "2",
+    "Matcher": {
+     "HttpCode": "200-299"
+    },
+    "Port": 80,
+    "Protocol": "HTTP",
+    "TargetGroupAttributes": [
+     {
+      "Key": "deregistration_delay.timeout_seconds",
+      "Value": "60"
+     }
+    ],
+    "TargetType": "ip",
+    "UnhealthyThresholdCount": "5",
+    "VpcId": {
+     "Fn::If": [
+      "CUSTOM_VPC_REF",
+      {
+       "Ref": "VPCRef"
       },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-VPCRef"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup"
+  },
+  "AccessSecurityGroup": {
+   "Properties": {
+    "GroupDescription": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       " for internal access"
+      ]
+     ]
+    },
+    "VpcId": {
+     "Fn::If": [
+      "CUSTOM_VPC_REF",
+      {
+       "Ref": "VPCRef"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-VPCRef"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::EC2::SecurityGroup"
+  },
+  "AccessSgEgressToAlb": {
+   "Properties": {
+    "Description": "Outgoing from Access to ALB SG",
+    "DestinationSecurityGroupId": {
+     "Ref": "ALBSecurityGroup"
+    },
+    "FromPort": 80,
+    "GroupId": {
+     "Ref": "AccessSecurityGroup"
+    },
+    "IpProtocol": "tcp",
+    "ToPort": 80
+   },
+   "Type": "AWS::EC2::SecurityGroupEgress"
+  },
+  "AlbAlarm": {
+   "Condition": "ALARMS_ENABLED",
+   "Properties": {
+    "ActionsEnabled": true,
+    "AlarmActions": [
+     {
+      "Fn::If": [
+       "CUSTOM_ALERT_SNS_REF",
+       {
+        "Ref": "AlertsSnsTopicRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-AlertsSnsTopicRef"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "AlarmDescription": "ALB server error > 0",
+    "ComparisonOperator": "GreaterThanThreshold",
+    "Dimensions": [
+     {
+      "Name": "LoadBalancer",
       "Value": {
        "Fn::GetAtt": [
         "ApplicationLoadBalancer",
-        "DNSName"
+        "LoadBalancerFullName"
        ]
       }
      }
-    },
-    "Parameters": {
-     "AlertsSnsTopicRef": {
-      "Default": "",
-      "Description": "(optional) The ref of the sns topic to deliver alarms",
-      "Type": "String"
-     },
-     "AuthUserPoolArn": {
-      "Default": "",
-      "Description": "(optional) The ARN of the user pool",
-      "Type": "String"
-     },
-     "AuthUserPoolClientWebRef": {
-      "Default": "",
-      "Description": "(optional) The REF of the user pool web client",
-      "Type": "String"
-     },
-     "AuthUserPoolRef": {
-      "Default": "",
-      "Description": "(optional) The REF of the user pool",
-      "Type": "String"
-     },
-     "BuildEnvVarsJson": {
-      "Default": "{}",
-      "Description": "(optional) A JSON that will be used as env var during build",
-      "Type": "String"
-     },
-     "BuildspecPath": {
-      "Default": "",
-      "Description": "Path with filename to the buildspec.yml for CodeBuild",
-      "Type": "String"
-     },
-     "CICDManualApproval": {
-      "AllowedValues": [
-       "True",
-       "False"
-      ],
-      "Default": "True",
-      "Description": "Is manual approval required before deployment?",
-      "Type": "String"
-     },
-     "CommitID": {
-      "Default": "",
-      "Description": "(optional) GitHub commit ID of that has to be built.  If unspecified it always automatically builds the latest.",
-      "Type": "String"
-     },
-     "DeploymentId": {
-      "Description": "deployment_id",
-      "Type": "String"
-     },
-     "DeploymentSecretArn": {
-      "Default": "",
-      "Description": "(optional) The arn of the deployment_secret",
-      "Type": "String"
-     },
-     "DeploymentType": {
-      "Description": "[ DEV | PROD ]",
-      "Type": "String"
-     },
-     "EcrIncomingConnectionSecurityGroupId": {
-      "Default": "",
-      "Description": "(optional) Local inbound enabled SG",
-      "Type": "String"
-     },
-     "EcsTaskCPU": {
-      "Default": "256",
-      "Description": "(optional) CPU capacity (for example 256 or 1024)",
-      "Type": "String"
-     },
-     "EcsTaskRAM": {
-      "Default": "512",
-      "Description": "(optional) RAM capacity (for example 512 or 3072)",
-      "Type": "String"
-     },
-     "GithubBranch": {
-      "Default": "main",
-      "Description": "GitHub branch name to be deployed",
-      "Type": "String"
-     },
-     "GithubOwner": {
-      "Description": "Github account name",
-      "Type": "String"
-     },
-     "GithubRepoName": {
-      "Description": "GitHub repository name",
-      "Type": "String"
-     },
-     "GithubSecretArn": {
-      "Default": "",
-      "Description": "(optional) The arn of the github_secret",
-      "Type": "String"
-     },
-     "InstanceCount": {
-      "Description": "Number of desired instances running in paraallel",
-      "MinValue": 0,
-      "Type": "Number"
-     },
-     "LocalOutgoingConnectionSecurityGroupId": {
-      "Default": "",
-      "Description": "(optional) Local outbound enabled SG",
-      "Type": "String"
-     },
-     "NatOutgoingConnectionSecurityGroupId": {
-      "Default": "",
-      "Description": "(optional) NAT outbound enabled SG",
-      "Type": "String"
-     },
-     "PipelineId": {
-      "Description": "pipeline_id",
-      "Type": "String"
-     },
-     "PrimaryPrivateSubnetRef": {
-      "Default": "",
-      "Description": "(optional) The primary private subnet in the VPC",
-      "Type": "String"
-     },
-     "RestApiId": {
-      "Default": "",
-      "Description": "(optional) The ref of the API Gateway to deploy to",
-      "Type": "String"
-     },
-     "RootResourceId": {
-      "Default": "",
-      "Description": "(optional) The ID of the API GW resource to deploy the newresources as children",
-      "Type": "String"
-     },
-     "RuntimeJson": {
-      "Default": "{}",
-      "Description": "(optional) A JSON that will be passed to the running instance",
-      "Type": "String"
-     },
-     "SecondaryPrivateSubnetRef": {
-      "Default": "",
-      "Description": "(optional) The secondary private subnet in the VPC",
-      "Type": "String"
-     },
-     "VPCCidrBlock": {
-      "Default": "",
-      "Description": "(optional) The VPC's CIDR block (IP mask)",
-      "Type": "String"
-     },
-     "VPCRef": {
-      "Default": "",
-      "Description": "(optional) The VPC",
-      "Type": "String"
-     }
-    },
-    "Resources": {
-     "ALBListener": {
-      "Properties": {
-       "DefaultActions": [
-        {
-         "TargetGroupArn": {
-          "Ref": "ALBTargetGroup"
-         },
-         "Type": "forward"
-        }
-       ],
-       "LoadBalancerArn": {
-        "Ref": "ApplicationLoadBalancer"
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "HTTPCode_ELB_5XX_Count",
+    "Namespace": "AWS/ApplicationELB",
+    "Period": 60,
+    "Statistic": "Sum",
+    "Threshold": "0"
+   },
+   "Type": "AWS::CloudWatch::Alarm"
+  },
+  "AlbAlarm2": {
+   "Condition": "ALARMS_ENABLED",
+   "Properties": {
+    "ActionsEnabled": true,
+    "AlarmActions": [
+     {
+      "Fn::If": [
+       "CUSTOM_ALERT_SNS_REF",
+       {
+        "Ref": "AlertsSnsTopicRef"
        },
-       "Port": 80,
-       "Protocol": "HTTP"
-      },
-      "Type": "AWS::ElasticLoadBalancingV2::Listener"
-     },
-     "ALBSecurityGroup": {
-      "Properties": {
-       "GroupDescription": "From backend SG, trough ALB, to instance",
-       "GroupName": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          "-",
-          {
-           "Ref": "PipelineId"
-          },
-          " for ALB"
-         ]
-        ]
-       },
-       "SecurityGroupIngress": [
-        {
-         "IpProtocol": "-1",
-         "SourceSecurityGroupId": {
-          "Fn::If": [
-           "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG",
-           {
-            "Ref": "LocalOutgoingConnectionSecurityGroupId"
-           },
-           {
-            "Fn::ImportValue": {
-             "Fn::Join": [
-              "",
-              [
-               {
-                "Ref": "DeploymentId"
-               },
-               "-LocalOutgoingConnectionSecurityGroupId"
-              ]
-             ]
-            }
-           }
-          ]
-         }
-        },
-        {
-         "IpProtocol": "-1",
-         "SourceSecurityGroupId": {
-          "Ref": "AccessSecurityGroup"
-         }
-        },
-        {
-         "CidrIp": {
-          "Fn::If": [
-           "CUSTOM_VPC_CIDR_BLOCK",
-           {
-            "Ref": "VPCCidrBlock"
-           },
-           {
-            "Fn::ImportValue": {
-             "Fn::Join": [
-              "",
-              [
-               {
-                "Ref": "DeploymentId"
-               },
-               "-VPCCidrBlock"
-              ]
-             ]
-            }
-           }
-          ]
-         },
-         "IpProtocol": "-1"
-        }
-       ],
-       "VpcId": {
-        "Fn::If": [
-         "CUSTOM_VPC_REF",
-         {
-          "Ref": "VPCRef"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-VPCRef"
-            ]
-           ]
-          }
-         }
-        ]
-       }
-      },
-      "Type": "AWS::EC2::SecurityGroup"
-     },
-     "ALBTargetGroup": {
-      "Properties": {
-       "HealthCheckIntervalSeconds": "80",
-       "HealthCheckPath": "/health_check",
-       "HealthCheckProtocol": "HTTP",
-       "HealthCheckTimeoutSeconds": "50",
-       "HealthyThresholdCount": "2",
-       "Matcher": {
-        "HttpCode": "200-299"
-       },
-       "Port": 80,
-       "Protocol": "HTTP",
-       "TargetGroupAttributes": [
-        {
-         "Key": "deregistration_delay.timeout_seconds",
-         "Value": "60"
-        }
-       ],
-       "TargetType": "ip",
-       "UnhealthyThresholdCount": "5",
-       "VpcId": {
-        "Fn::If": [
-         "CUSTOM_VPC_REF",
-         {
-          "Ref": "VPCRef"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-VPCRef"
-            ]
-           ]
-          }
-         }
-        ]
-       }
-      },
-      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup"
-     },
-     "AccessSecurityGroup": {
-      "Properties": {
-       "GroupDescription": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          "-",
-          {
-           "Ref": "PipelineId"
-          },
-          " for internal access"
-         ]
-        ]
-       },
-       "VpcId": {
-        "Fn::If": [
-         "CUSTOM_VPC_REF",
-         {
-          "Ref": "VPCRef"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-VPCRef"
-            ]
-           ]
-          }
-         }
-        ]
-       }
-      },
-      "Type": "AWS::EC2::SecurityGroup"
-     },
-     "AccessSgEgressToAlb": {
-      "Properties": {
-       "Description": "Outgoing from Access to ALB SG",
-       "DestinationSecurityGroupId": {
-        "Ref": "ALBSecurityGroup"
-       },
-       "FromPort": 80,
-       "GroupId": {
-        "Ref": "AccessSecurityGroup"
-       },
-       "IpProtocol": "tcp",
-       "ToPort": 80
-      },
-      "Type": "AWS::EC2::SecurityGroupEgress"
-     },
-     "AlbAlarm": {
-      "Properties": {
-       "ActionsEnabled": true,
-       "AlarmActions": [
-        {
-         "Fn::If": [
-          "CUSTOM_ALERT_SNS_REF",
-          {
-           "Ref": "AlertsSnsTopicRef"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-AlertsSnsTopicRef"
-             ]
-            ]
-           }
-          }
-         ]
-        }
-       ],
-       "AlarmDescription": "ALB server error > 0",
-       "ComparisonOperator": "GreaterThanThreshold",
-       "Dimensions": [
-        {
-         "Name": "LoadBalancer",
-         "Value": {
-          "Fn::GetAtt": [
-           "ApplicationLoadBalancer",
-           "LoadBalancerFullName"
-          ]
-         }
-        }
-       ],
-       "EvaluationPeriods": 2,
-       "MetricName": "HTTPCode_ELB_5XX_Count",
-       "Namespace": "AWS/ApplicationELB",
-       "Period": 60,
-       "Statistic": "Sum",
-       "Threshold": "0"
-      },
-      "Type": "AWS::CloudWatch::Alarm"
-     },
-     "AlbAlarm2": {
-      "Properties": {
-       "ActionsEnabled": true,
-       "AlarmActions": [
-        {
-         "Fn::If": [
-          "CUSTOM_ALERT_SNS_REF",
-          {
-           "Ref": "AlertsSnsTopicRef"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-AlertsSnsTopicRef"
-             ]
-            ]
-           }
-          }
-         ]
-        }
-       ],
-       "AlarmDescription": "ALB unhealthy instances > 0",
-       "ComparisonOperator": "GreaterThanThreshold",
-       "Dimensions": [
-        {
-         "Name": "LoadBalancer",
-         "Value": {
-          "Fn::GetAtt": [
-           "ApplicationLoadBalancer",
-           "LoadBalancerFullName"
-          ]
-         }
-        }
-       ],
-       "EvaluationPeriods": 2,
-       "MetricName": "UnHealthyHostCount",
-       "Namespace": "AWS/ApplicationELB",
-       "Period": 60,
-       "Statistic": "Sum",
-       "Threshold": "0"
-      },
-      "Type": "AWS::CloudWatch::Alarm"
-     },
-     "AlbAlarm3": {
-      "Properties": {
-       "ActionsEnabled": true,
-       "AlarmActions": [
-        {
-         "Fn::If": [
-          "CUSTOM_ALERT_SNS_REF",
-          {
-           "Ref": "AlertsSnsTopicRef"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-AlertsSnsTopicRef"
-             ]
-            ]
-           }
-          }
-         ]
-        }
-       ],
-       "AlarmDescription": "ALB average latency > 3 s",
-       "ComparisonOperator": "GreaterThanThreshold",
-       "Dimensions": [
-        {
-         "Name": "LoadBalancer",
-         "Value": {
-          "Fn::GetAtt": [
-           "ApplicationLoadBalancer",
-           "LoadBalancerFullName"
-          ]
-         }
-        }
-       ],
-       "EvaluationPeriods": 2,
-       "MetricName": "TargetResponseTime",
-       "Namespace": "AWS/ApplicationELB",
-       "Period": 60,
-       "Statistic": "Average",
-       "Threshold": "3"
-      },
-      "Type": "AWS::CloudWatch::Alarm"
-     },
-     "AlbDnsNameParameter": {
-      "Properties": {
-       "Description": "The hostname of the deployed application load balancer",
-       "Name": {
-        "Fn::Join": [
-         "",
-         [
-          "/",
-          {
-           "Ref": "DeploymentId"
-          },
-          "/ecs/",
-          {
-           "Ref": "PipelineId"
-          },
-          "/albDnsName"
-         ]
-        ]
-       },
-       "Type": "String",
-       "Value": {
-        "Fn::GetAtt": [
-         "ApplicationLoadBalancer",
-         "DNSName"
-        ]
-       }
-      },
-      "Type": "AWS::SSM::Parameter"
-     },
-     "ApplicationLoadBalancer": {
-      "Properties": {
-       "IpAddressType": "ipv4",
-       "Scheme": "internal",
-       "SecurityGroups": [
-        {
-         "Ref": "ALBSecurityGroup"
-        }
-       ],
-       "Subnets": [
-        {
-         "Fn::If": [
-          "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
-          {
-           "Ref": "PrimaryPrivateSubnetRef"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-PrimaryPrivateSubnetRef"
-             ]
-            ]
-           }
-          }
-         ]
-        },
-        {
-         "Fn::If": [
-          "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
-          {
-           "Ref": "SecondaryPrivateSubnetRef"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-SecondaryPrivateSubnetRef"
-             ]
-            ]
-           }
-          }
-         ]
-        }
-       ],
-       "Type": "application"
-      },
-      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer"
-     },
-     "ArtifactsBucket": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-       "BucketEncryption": {
-        "ServerSideEncryptionConfiguration": [
-         {
-          "ServerSideEncryptionByDefault": {
-           "SSEAlgorithm": "AES256"
-          }
-         }
-        ]
-       },
-       "PublicAccessBlockConfiguration": {
-        "BlockPublicAcls": true,
-        "BlockPublicPolicy": true,
-        "IgnorePublicAcls": true,
-        "RestrictPublicBuckets": true
-       }
-      },
-      "Type": "AWS::S3::Bucket"
-     },
-     "CiCdArtifactsBucketPolicy": {
-      "Properties": {
-       "Bucket": {
-        "Ref": "ArtifactsBucket"
-       },
-       "PolicyDocument": {
-        "Statement": [
-         {
-          "Action": [
-           "s3:GetObject",
-           "s3:GetObjectVersion",
-           "s3:GetBucketVersioning"
-          ],
-          "Condition": {
-           "Bool": {
-            "aws:SecureTransport": false
-           }
-          },
-          "Effect": "Allow",
-          "Principal": {
-           "AWS": [
-            {
-             "Fn::GetAtt": [
-              "CodePipelineServiceRole",
-              "Arn"
-             ]
-            },
-            {
-             "Fn::GetAtt": [
-              "CodeBuildServiceRole",
-              "Arn"
-             ]
-            }
-           ]
-          },
-          "Resource": [
-           {
-            "Fn::Join": [
-             "",
-             [
-              "arn:aws:s3:::",
-              {
-               "Ref": "ArtifactsBucket"
-              }
-             ]
-            ]
-           },
-           {
-            "Fn::Join": [
-             "",
-             [
-              "arn:aws:s3:::",
-              {
-               "Ref": "ArtifactsBucket"
-              },
-              "/*"
-             ]
-            ]
-           }
-          ]
-         },
-         {
-          "Action": "s3:PutObject",
-          "Effect": "Allow",
-          "Principal": {
-           "AWS": [
-            {
-             "Fn::GetAtt": [
-              "CodePipelineServiceRole",
-              "Arn"
-             ]
-            },
-            {
-             "Fn::GetAtt": [
-              "CodeBuildServiceRole",
-              "Arn"
-             ]
-            }
-           ]
-          },
-          "Resource": [
-           {
-            "Fn::Join": [
-             "",
-             [
-              "arn:aws:s3:::",
-              {
-               "Ref": "ArtifactsBucket"
-              }
-             ]
-            ]
-           },
-           {
-            "Fn::Join": [
-             "",
-             [
-              "arn:aws:s3:::",
-              {
-               "Ref": "ArtifactsBucket"
-              },
-              "/*"
-             ]
-            ]
-           }
-          ]
-         }
-        ],
-        "Version": "2012-10-17"
-       }
-      },
-      "Type": "AWS::S3::BucketPolicy"
-     },
-     "Cluster": {
-      "Type": "AWS::ECS::Cluster"
-     },
-     "CodeBuildServiceRole": {
-      "Properties": {
-       "AssumeRolePolicyDocument": {
-        "Statement": [
-         {
-          "Action": [
-           "sts:AssumeRole"
-          ],
-          "Effect": "Allow",
-          "Principal": {
-           "Service": [
-            "codebuild.amazonaws.com"
-           ]
-          }
-         }
-        ]
-       },
-       "Path": "/",
-       "Policies": [
-        {
-         "PolicyDocument": {
-          "Statement": [
-           {
-            "Action": [
-             "logs:CreateLogStream",
-             "logs:PutLogEvents",
-             "logs:CreateLogGroup"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "s3:*"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-             {
-              "Fn::Join": [
-               "",
-               [
-                "arn:aws:s3:::",
-                {
-                 "Ref": "ArtifactsBucket"
-                }
-               ]
-              ]
-             },
-             {
-              "Fn::Join": [
-               "",
-               [
-                "arn:aws:s3:::",
-                {
-                 "Ref": "ArtifactsBucket"
-                },
-                "/*"
-               ]
-              ]
-             }
-            ]
-           },
-           {
-            "Action": [
-             "ecr:GetDownloadUrlForLayer",
-             "ecr:BatchGetImage",
-             "ecr:BatchCheckLayerAvailability",
-             "ecr:PutImage",
-             "ecr:InitiateLayerUpload",
-             "ecr:UploadLayerPart",
-             "ecr:CompleteLayerUpload",
-             "ecr:GetAuthorizationToken"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "cloudformation:*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "kms:GenerateDataKey*",
-             "kms:Encrypt",
-             "kms:Decrypt"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "sns:SendMessage"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "secretsmanager:GetSecretValue"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-             "*"
-            ]
-           }
-          ],
-          "Version": "2012-10-17"
-         },
-         "PolicyName": {
-          "Fn::Join": [
-           "",
-           [
-            {
-             "Ref": "DeploymentId"
-            },
-            "-",
-            {
-             "Ref": "PipelineId"
-            },
-            "-CodeBuildService"
-           ]
-          ]
-         }
-        }
-       ]
-      },
-      "Type": "AWS::IAM::Role"
-     },
-     "CodePipelineServiceRole": {
-      "Properties": {
-       "AssumeRolePolicyDocument": {
-        "Statement": [
-         {
-          "Action": [
-           "sts:AssumeRole"
-          ],
-          "Effect": "Allow",
-          "Principal": {
-           "Service": [
-            "codepipeline.amazonaws.com"
-           ]
-          }
-         }
-        ]
-       },
-       "Path": "/",
-       "Policies": [
-        {
-         "PolicyDocument": {
-          "Statement": [
-           {
-            "Action": [
-             "s3:GetObject",
-             "s3:GetObjectVersion",
-             "s3:GetBucketVersioning*",
-             "s3:PutObject"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-             {
-              "Fn::Join": [
-               "",
-               [
-                "arn:aws:s3:::",
-                {
-                 "Ref": "ArtifactsBucket"
-                }
-               ]
-              ]
-             },
-             {
-              "Fn::Join": [
-               "",
-               [
-                "arn:aws:s3:::",
-                {
-                 "Ref": "ArtifactsBucket"
-                },
-                "/*"
-               ]
-              ]
-             }
-            ]
-           },
-           {
-            "Action": [
-             "codebuild:StartBuild",
-             "codebuild:BatchGetBuilds"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "cloudwatch:*",
-             "ecs:*",
-             "sns:*",
-             "cloudformation:*",
-             "rds:*",
-             "sqs:*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "iam:PassRole"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-                {
-                    "Fn::GetAtt": [
-                     "CodeBuildServiceRole",
-                     "Arn"
-                    ]
-                }
-              ]
-           },
-           {
-            "Action": [
-             "ecr:GetDownloadUrlForLayer",
-             "ecr:BatchGetImage",
-             "ecr:BatchCheckLayerAvailability",
-             "ecr:PutImage",
-             "ecr:InitiateLayerUpload",
-             "ecr:UploadLayerPart",
-             "ecr:CompleteLayerUpload"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "lambda:InvokeFunction",
-             "lambda:ListFunctions"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           }
-          ],
-          "Version": "2012-10-17"
-         },
-         "PolicyName": {
-          "Fn::Join": [
-           "",
-           [
-            {
-             "Ref": "DeploymentId"
-            },
-            "-",
-            {
-             "Ref": "PipelineId"
-            },
-            "-CodePipelineService"
-           ]
-          ]
-         }
-        }
-       ]
-      },
-      "Type": "AWS::IAM::Role"
-     },
-     "ExecutionRole": {
-      "Properties": {
-       "AssumeRolePolicyDocument": {
-        "Statement": [
-         {
-          "Action": [
-           "sts:AssumeRole"
-          ],
-          "Effect": "Allow",
-          "Principal": {
-           "Service": [
-            "ecs-tasks.amazonaws.com"
-           ]
-          }
-         }
-        ]
-       },
-       "ManagedPolicyArns": [
-        "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
-        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
-        "arn:aws:iam::aws:policy/AmazonS3FullAccess",
-        "arn:aws:iam::aws:policy/service-role/AWSTransferLoggingAccess",
-        "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-       ],
-       "Path": "/",
-       "Policies": [
-        {
-         "PolicyDocument": {
-          "Statement": [
-           {
-            "Action": [
-             "ecr:GetAuthorizationToken",
-             "ecr:BatchCheckLayerAvailability",
-             "ecr:GetDownloadUrlForLayer",
-             "ecr:BatchGetImage",
-             "logs:CreateLogStream",
-             "logs:PutLogEvents"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           }
-          ],
-          "Version": "2012-10-17"
-         },
-         "PolicyName": {
-          "Fn::Join": [
-           "",
-           [
-            {
-             "Ref": "DeploymentId"
-            },
-            "-",
-            {
-             "Ref": "PipelineId"
-            },
-            "-TaskExecutionRole"
-           ]
-          ]
-         }
-        }
-       ]
-      },
-      "Type": "AWS::IAM::Role"
-     },
-     "InstanceSecurityGroup": {
-      "Properties": {
-       "GroupDescription": "From ALB, through instance, to outside",
-       "GroupName": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          "-",
-          {
-           "Ref": "PipelineId"
-          },
-          " for the instance"
-         ]
-        ]
-       },
-       "SecurityGroupIngress": [
-        {
-         "IpProtocol": "-1",
-         "SourceSecurityGroupId": {
-          "Ref": "ALBSecurityGroup"
-         }
-        }
-       ],
-       "VpcId": {
-        "Fn::If": [
-         "CUSTOM_VPC_REF",
-         {
-          "Ref": "VPCRef"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-VPCRef"
-            ]
-           ]
-          }
-         }
-        ]
-       }
-      },
-      "Type": "AWS::EC2::SecurityGroup"
-     },
-     "LogGroup": {
-      "Properties": {
-       "LogGroupName": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          "-",
-          {
-           "Ref": "PipelineId"
-          }
-         ]
-        ]
-       },
-       "RetentionInDays": 365
-      },
-      "Type": "AWS::Logs::LogGroup",
-      "UpdateReplacePolicy": "Retain"
-     },
-     "NLBApiGatewayMethod": {
-      "Properties": {
-       "ApiKeyRequired": true,
-       "AuthorizationType": "NONE",
-       "HttpMethod": "ANY",
-       "Integration": {
-        "ConnectionId": {
-         "Ref": "NlbVpcLink"
-        },
-        "ConnectionType": "VPC_LINK",
-        "IntegrationHttpMethod": "ANY",
-        "RequestParameters": {
-         "integration.request.path.proxy": "method.request.path.proxy"
-        },
-        "Type": "HTTP_PROXY",
-        "Uri": {
+       {
+        "Fn::ImportValue": {
          "Fn::Join": [
           "",
           [
-           "http://",
            {
-            "Fn::GetAtt": [
-             "NetworkLoadBalancer",
-             "DNSName"
-            ]
+            "Ref": "DeploymentId"
            },
-           "/{proxy}"
+           "-AlertsSnsTopicRef"
           ]
          ]
         }
-       },
-       "RequestParameters": {
-        "method.request.path.proxy": "true"
-       },
-       "ResourceId": {
-        "Ref": "NLBApiGatewayProxyResource"
-       },
-       "RestApiId": {
-        "Fn::If": [
-         "CUSTOM_RESAPI_ID",
-         {
-          "Ref": "RestApiId"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-RestApiId"
-            ]
-           ]
-          }
-         }
-        ]
        }
-      },
-      "Type": "AWS::ApiGateway::Method"
-     },
-     "NLBApiGatewayProxyResource": {
-      "Properties": {
-       "ParentId": {
-        "Ref": "NLBApiGatewayResource"
+      ]
+     }
+    ],
+    "AlarmDescription": "ALB unhealthy instances > 0",
+    "ComparisonOperator": "GreaterThanThreshold",
+    "Dimensions": [
+     {
+      "Name": "LoadBalancer",
+      "Value": {
+       "Fn::GetAtt": [
+        "ApplicationLoadBalancer",
+        "LoadBalancerFullName"
+       ]
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "UnHealthyHostCount",
+    "Namespace": "AWS/ApplicationELB",
+    "Period": 60,
+    "Statistic": "Sum",
+    "Threshold": "0"
+   },
+   "Type": "AWS::CloudWatch::Alarm"
+  },
+  "AlbAlarm3": {
+   "Condition": "ALARMS_ENABLED",
+   "Properties": {
+    "ActionsEnabled": true,
+    "AlarmActions": [
+     {
+      "Fn::If": [
+       "CUSTOM_ALERT_SNS_REF",
+       {
+        "Ref": "AlertsSnsTopicRef"
        },
-       "PathPart": "{proxy+}",
-       "RestApiId": {
-        "Fn::If": [
-         "CUSTOM_RESAPI_ID",
-         {
-          "Ref": "RestApiId"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-RestApiId"
-            ]
-           ]
-          }
-         }
-        ]
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-AlertsSnsTopicRef"
+          ]
+         ]
+        }
        }
-      },
-      "Type": "AWS::ApiGateway::Resource"
-     },
-     "NLBApiGatewayResource": {
-      "Properties": {
-       "ParentId": {
-        "Fn::If": [
-         "CUSTOM_ROOT_RESOURCE_ID",
-         {
-          "Ref": "RootResourceId"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-RootResourceId"
-            ]
-           ]
-          }
-         }
-        ]
+      ]
+     }
+    ],
+    "AlarmDescription": "ALB average latency > 3 s",
+    "ComparisonOperator": "GreaterThanThreshold",
+    "Dimensions": [
+     {
+      "Name": "LoadBalancer",
+      "Value": {
+       "Fn::GetAtt": [
+        "ApplicationLoadBalancer",
+        "LoadBalancerFullName"
+       ]
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "TargetResponseTime",
+    "Namespace": "AWS/ApplicationELB",
+    "Period": 60,
+    "Statistic": "Average",
+    "Threshold": "3"
+   },
+   "Type": "AWS::CloudWatch::Alarm"
+  },
+  "AlbDnsNameParameter": {
+   "Properties": {
+    "Description": "The hostname of the deployed application load balancer",
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       "/",
+       {
+        "Ref": "DeploymentId"
        },
-       "PathPart": {
+       "/ecs/",
+       {
         "Ref": "PipelineId"
        },
-       "RestApiId": {
-        "Fn::If": [
-         "CUSTOM_RESAPI_ID",
-         {
-          "Ref": "RestApiId"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-RestApiId"
-            ]
-           ]
-          }
-         }
-        ]
-       }
-      },
-      "Type": "AWS::ApiGateway::Resource"
+       "/albDnsName"
+      ]
+     ]
+    },
+    "Type": "String",
+    "Value": {
+     "Fn::GetAtt": [
+      "ApplicationLoadBalancer",
+      "DNSName"
+     ]
+    }
+   },
+   "Type": "AWS::SSM::Parameter"
+  },
+  "ApiGatewayMappedToRoot": {
+   "Condition": "MAP_TO_ROOT_PATH",
+   "Properties": {
+    "ApiKeyRequired": {
+     "Fn::If": [
+      "API_KEY_REQUIRED",
+      true,
+      false
+     ]
+    },
+    "AuthorizationType": {
+     "Fn::If": [
+      "IAM_AUTH_REQUIRED",
+      "AWS_IAM",
+      "NONE"
+     ]
+    },
+    "HttpMethod": "ANY",
+    "Integration": {
+     "ConnectionId": {
+      "Ref": "NlbVpcLink"
      },
-     "NLBListener": {
-      "Properties": {
-       "DefaultActions": [
+     "ConnectionType": "VPC_LINK",
+     "IntegrationHttpMethod": "ANY",
+     "RequestParameters": {
+      "integration.request.path.proxy": "method.request.path.proxy"
+     },
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
         {
-         "TargetGroupArn": {
-          "Ref": "NLBTargetGroup"
-         },
-         "Type": "forward"
-        }
-       ],
-       "LoadBalancerArn": {
-        "Ref": "NetworkLoadBalancer"
-       },
-       "Port": 80,
-       "Protocol": "TCP"
+         "Fn::GetAtt": [
+          "NetworkLoadBalancer",
+          "DNSName"
+         ]
+        },
+        "/{proxy}"
+       ]
+      ]
+     }
+    },
+    "RequestParameters": {
+     "method.request.path.proxy": "true"
+    },
+    "ResourceId": {
+     "Ref": "ApiGatewayMappedToRootProxyResource"
+    },
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
       },
-      "Type": "AWS::ElasticLoadBalancingV2::Listener"
-     },
-     "NLBSecurityGroup": {
-      "Properties": {
-       "GroupDescription": "From anywhere to the NLB",
-       "GroupName": {
+      {
+       "Fn::ImportValue": {
         "Fn::Join": [
          "",
          [
           {
            "Ref": "DeploymentId"
           },
-          "-",
-          {
-           "Ref": "PipelineId"
-          },
-          " for NLB"
+          "-RestApiId"
          ]
-        ]
-       },
-       "SecurityGroupEgress": [
-        {
-         "FromPort": 1,
-         "IpProtocol": "tcp",
-         "SourceSecurityGroupId": {
-          "Fn::GetAtt": [
-           "ALBSecurityGroup",
-           "GroupId"
-          ]
-         },
-         "ToPort": 65535
-        }
-       ],
-       "SecurityGroupIngress": [
-        {
-         "CidrIp": "0.0.0.0/0",
-         "FromPort": 1,
-         "IpProtocol": "tcp",
-         "ToPort": 65535
-        }
-       ],
-       "VpcId": {
-        "Fn::If": [
-         "CUSTOM_VPC_REF",
-         {
-          "Ref": "VPCRef"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-VPCRef"
-            ]
-           ]
-          }
-         }
         ]
        }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Method"
+  },
+  "ApiGatewayMappedToRootProxyResource": {
+   "Condition": "MAP_TO_ROOT_PATH",
+   "Properties": {
+    "ParentId": {
+     "Fn::If": [
+      "CUSTOM_ROOT_RESOURCE_ID",
+      {
+       "Ref": "RootResourceId"
       },
-      "Type": "AWS::EC2::SecurityGroup"
-     },
-     "NLBTargetGroup": {
-      "Properties": {
-       "HealthCheckIntervalSeconds": "80",
-       "HealthCheckPath": "/health_check",
-       "HealthCheckProtocol": "HTTP",
-       "HealthCheckTimeoutSeconds": "50",
-       "HealthyThresholdCount": "2",
-       "Matcher": {
-        "HttpCode": "200-299"
-       },
-       "Port": 80,
-       "Protocol": "TCP",
-       "TargetType": "alb",
-       "Targets": [
-        {
-         "Id": {
-          "Ref": "ApplicationLoadBalancer"
-         },
-         "Port": 80
-        }
-       ],
-       "UnhealthyThresholdCount": "5",
-       "VpcId": {
-        "Fn::If": [
-         "CUSTOM_VPC_REF",
-         {
-          "Ref": "VPCRef"
-         },
-         {
-          "Fn::ImportValue": {
-           "Fn::Join": [
-            "",
-            [
-             {
-              "Ref": "DeploymentId"
-             },
-             "-VPCRef"
-            ]
-           ]
-          }
-         }
-        ]
-       }
-      },
-      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup"
-     },
-     "NetworkLoadBalancer": {
-      "Properties": {
-       "Scheme": "internal",
-       "SecurityGroups": [
-        {
-         "Ref": "ALBSecurityGroup"
-        },
-        {
-         "Ref": "NLBSecurityGroup"
-        }
-       ],
-       "Subnets": [
-        {
-         "Fn::If": [
-          "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
-          {
-           "Ref": "PrimaryPrivateSubnetRef"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-PrimaryPrivateSubnetRef"
-             ]
-            ]
-           }
-          }
-         ]
-        },
-        {
-         "Fn::If": [
-          "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
-          {
-           "Ref": "SecondaryPrivateSubnetRef"
-          },
-          {
-           "Fn::ImportValue": {
-            "Fn::Join": [
-             "",
-             [
-              {
-               "Ref": "DeploymentId"
-              },
-              "-SecondaryPrivateSubnetRef"
-             ]
-            ]
-           }
-          }
-         ]
-        }
-       ],
-       "Type": "network"
-      },
-      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer"
-     },
-     "NlbVpcLink": {
-      "Properties": {
-       "Name": {
+      {
+       "Fn::ImportValue": {
         "Fn::Join": [
          "",
          [
           {
            "Ref": "DeploymentId"
           },
-          "-",
-          {
-           "Ref": "PipelineId"
-          },
-          "-NlbVpcLink"
+          "-RootResourceId"
          ]
         ]
-       },
-       "TargetArns": [
-        {
-         "Ref": "NetworkLoadBalancer"
-        }
-       ]
+       }
+      }
+     ]
+    },
+    "PathPart": "{proxy+}",
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
       },
-      "Type": "AWS::ApiGateway::VpcLink"
-     },
-     "Pipeline": {
-      "DependsOn": [
-       "Project"
-      ],
-      "Properties": {
-       "ArtifactStore": {
-        "Location": {
-         "Ref": "ArtifactsBucket"
-        },
-        "Type": "S3"
-       },
-       "RestartExecutionOnUpdate": true,
-       "RoleArn": {
-        "Fn::GetAtt": [
-         "CodePipelineServiceRole",
-         "Arn"
-        ]
-       },
-       "Stages": [
-        {
-         "Actions": [
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
           {
-           "ActionTypeId": {
-            "Category": "Source",
-            "Owner": "ThirdParty",
-            "Provider": "GitHub",
-            "Version": "1"
-           },
-           "Configuration": {
-            "Branch": {
-             "Ref": "GithubBranch"
-            },
-            "OAuthToken": {
-             "Fn::Join": [
-              "",
-              [
-               "{{resolve:secretsmanager:",
-               {
-                "Fn::If": [
-                 "CUSTOM_GITHUB_TOKEN_SECRET_NAME",
-                 {
-                  "Ref": "GithubSecretArn"
-                 },
-                 {
-                  "Fn::ImportValue": {
-                   "Fn::Join": [
-                    "",
-                    [
-                     {
-                      "Ref": "DeploymentId"
-                     },
-                     "-GithubSecretArn"
-                    ]
-                   ]
-                  }
-                 }
-                ]
-               },
-               ":SecretString:token}}"
-              ]
-             ]
-            },
-            "Owner": {
-             "Ref": "GithubOwner"
-            },
-            "PollForSourceChanges": false,
-            "Repo": {
-             "Ref": "GithubRepoName"
-            }
-           },
-           "Name": "BuildSourceAction",
-           "OutputArtifacts": [
-            {
-             "Name": "SourceArtifact"
-            }
-           ],
-           "RunOrder": 1
-          }
-         ],
-         "Name": "Source"
-        },
-        {
-         "Actions": [
-          {
-           "ActionTypeId": {
-            "Category": "Build",
-            "Owner": "AWS",
-            "Provider": "CodeBuild",
-            "Version": "1"
-           },
-           "Configuration": {
-            "ProjectName": {
-             "Fn::Join": [
-              "",
-              [
-               {
-                "Ref": "DeploymentId"
-               },
-               "-",
-               {
-                "Ref": "PipelineId"
-               }
-              ]
-             ]
-            }
-           },
-           "InputArtifacts": [
-            {
-             "Name": "SourceArtifact"
-            }
-           ],
-           "Name": "BuildAction",
-           "OutputArtifacts": [
-            {
-             "Name": "BuildArtifact"
-            }
-           ],
-           "RunOrder": 1
-          }
-         ],
-         "Name": "Build"
-        },
-        {
-         "Fn::If": [
-          "MANUAL_APPROVAL_SELECTED",
-          {
-           "Actions": [
-            {
-             "ActionTypeId": {
-              "Category": "Approval",
-              "Owner": "AWS",
-              "Provider": "Manual",
-              "Version": "1"
-             },
-             "Name": "ApprovalAction",
-             "RunOrder": 1
-            }
-           ],
-           "Name": "Approval"
+           "Ref": "DeploymentId"
           },
-          {
-           "Ref": "AWS::NoValue"
-          }
+          "-RestApiId"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Resource"
+  },
+  "ApiGatewayMappedToRootRootMethod": {
+   "Condition": "MAP_TO_ROOT_PATH",
+   "Properties": {
+    "ApiKeyRequired": {
+     "Fn::If": [
+      "API_KEY_REQUIRED",
+      true,
+      false
+     ]
+    },
+    "AuthorizationType": {
+     "Fn::If": [
+      "IAM_AUTH_REQUIRED",
+      "AWS_IAM",
+      "NONE"
+     ]
+    },
+    "HttpMethod": "ANY",
+    "Integration": {
+     "ConnectionId": {
+      "Ref": "NlbVpcLink"
+     },
+     "ConnectionType": "VPC_LINK",
+     "IntegrationHttpMethod": "ANY",
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::GetAtt": [
+          "NetworkLoadBalancer",
+          "DNSName"
          ]
         },
-        {
-         "Actions": [
-          {
-           "ActionTypeId": {
-            "Category": "Deploy",
-            "Owner": "AWS",
-            "Provider": "ECS",
-            "Version": "1"
-           },
-           "Configuration": {
-            "ClusterName": {
-             "Ref": "Cluster"
-            },
-            "FileName": "imagedefinitions.json",
-            "ServiceName": {
-             "Fn::Join": [
-              "",
-              [
-               {
-                "Ref": "DeploymentId"
-               },
-               "-",
-               {
-                "Ref": "PipelineId"
-               }
-              ]
-             ]
-            }
-           },
-           "InputArtifacts": [
-            {
-             "Name": "BuildArtifact"
-            }
-           ],
-           "Name": "DeployAction",
-           "RunOrder": 5
-          }
-         ],
-         "Name": "Deploy"
-        }
+        "/"
        ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Fn::If": [
+      "CUSTOM_ROOT_RESOURCE_ID",
+      {
+       "Ref": "RootResourceId"
       },
-      "Type": "AWS::CodePipeline::Pipeline"
-     },
-     "PipelineWebhook": {
-      "Properties": {
-       "Authentication": "GITHUB_HMAC",
-       "AuthenticationConfiguration": {
-        "SecretToken": {
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RootResourceId"
+         ]
+        ]
+       }
+      }
+     ]
+    },
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RestApiId"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Method"
+  },
+  "ApplicationLoadBalancer": {
+   "Properties": {
+    "IpAddressType": "ipv4",
+    "Scheme": "internal",
+    "SecurityGroups": [
+     {
+      "Ref": "ALBSecurityGroup"
+     }
+    ],
+    "Subnets": [
+     {
+      "Fn::If": [
+       "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
+       {
+        "Ref": "PrimaryPrivateSubnetRef"
+       },
+       {
+        "Fn::ImportValue": {
          "Fn::Join": [
           "",
           [
-           "{{resolve:secretsmanager:",
            {
-            "Fn::If": [
-             "CUSTOM_GITHUB_TOKEN_SECRET_NAME",
-             {
-              "Ref": "GithubSecretArn"
-             },
-             {
-              "Fn::ImportValue": {
-               "Fn::Join": [
-                "",
-                [
-                 {
-                  "Ref": "DeploymentId"
-                 },
-                 "-GithubSecretArn"
-                ]
-               ]
-              }
-             }
-            ]
+            "Ref": "DeploymentId"
            },
-           ":SecretString:token}}"
+           "-PrimaryPrivateSubnetRef"
           ]
          ]
         }
-       },
-       "Filters": [
-        {
-         "JsonPath": "$.ref",
-         "MatchEquals": "refs/heads/{Branch}"
-        }
-       ],
-       "RegisterWithThirdParty": true,
-       "TargetAction": "BuildSourceAction",
-       "TargetPipeline": {
-        "Ref": "Pipeline"
-       },
-       "TargetPipelineVersion": {
-        "Fn::GetAtt": [
-         "Pipeline",
-         "Version"
-        ]
        }
-      },
-      "Type": "AWS::CodePipeline::Webhook"
+      ]
      },
-     "Project": {
-      "Properties": {
-       "Artifacts": {
-        "Type": "CODEPIPELINE"
+     {
+      "Fn::If": [
+       "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
+       {
+        "Ref": "SecondaryPrivateSubnetRef"
        },
-       "Description": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          "-",
-          {
-           "Ref": "PipelineId"
-          },
-          " build project"
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-SecondaryPrivateSubnetRef"
+          ]
          ]
-        ]
+        }
+       }
+      ]
+     }
+    ],
+    "Type": "application"
+   },
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer"
+  },
+  "ArtifactsBucket": {
+   "DeletionPolicy": "Retain",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "Type": "AWS::S3::Bucket"
+  },
+  "CiCdArtifactsBucketPolicy": {
+   "Properties": {
+    "Bucket": {
+     "Ref": "ArtifactsBucket"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:GetBucketVersioning"
+       ],
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": false
+        }
        },
-       "Environment": {
-        "ComputeType": "BUILD_GENERAL1_SMALL",
-        "EnvironmentVariables": [
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": [
          {
-          "Name": "AWS_REGION",
-          "Value": {
-           "Ref": "AWS::Region"
-          }
+          "Fn::GetAtt": [
+           "CodePipelineServiceRole",
+           "Arn"
+          ]
          },
          {
-          "Name": "REPOSITORY_URI",
-          "Value": {
+          "Fn::GetAtt": [
+           "CodeBuildServiceRole",
+           "Arn"
+          ]
+         }
+        ]
+       },
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:PutObject",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": [
+         {
+          "Fn::GetAtt": [
+           "CodePipelineServiceRole",
+           "Arn"
+          ]
+         },
+         {
+          "Fn::GetAtt": [
+           "CodeBuildServiceRole",
+           "Arn"
+          ]
+         }
+        ]
+       },
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:s3:::",
+           {
+            "Ref": "ArtifactsBucket"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Type": "AWS::S3::BucketPolicy"
+  },
+  "Cluster": {
+   "DependsOn": [
+    "ExecutionRole"
+   ],
+   "Type": "AWS::ECS::Cluster"
+  },
+  "CodeBuildServiceRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "codebuild.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:CreateLogGroup"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "s3:*"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
            "Fn::Join": [
             "",
             [
+             "arn:aws:s3:::",
              {
-              "Ref": "AWS::AccountId"
-             },
-             ".dkr.ecr.",
-             {
-              "Ref": "AWS::Region"
-             },
-             ".amazonaws.com/",
-             {
-              "Ref": "Repo"
+              "Ref": "ArtifactsBucket"
              }
             ]
            ]
-          }
-         },
-         {
-          "Name": "REPO_NAME",
-          "Value": {
-           "Ref": "Repo"
-          }
-         },
-         {
-          "Name": "DEPLOYMENT_SECRET_ARN",
-          "Value": {
-           "Fn::If": [
-            "CUSTOM_DEPLOYMENT_SECRET_ARN",
-            {
-             "Ref": "DeploymentSecretArn"
-            },
-            {
-             "Fn::ImportValue": {
-              "Fn::Join": [
-               "",
-               [
-                {
-                 "Ref": "DeploymentId"
-                },
-                "-DeploymentSecretArn"
-               ]
-              ]
-             }
-            }
-           ]
-          }
-         },
-         {
-          "Name": "ALERTS_TOPIC_ARN",
-          "Value": {
-           "Fn::If": [
-            "CUSTOM_ALERT_SNS_REF",
-            {
-             "Ref": "AlertsSnsTopicRef"
-            },
-            {
-             "Fn::ImportValue": {
-              "Fn::Join": [
-               "",
-               [
-                {
-                 "Ref": "DeploymentId"
-                },
-                "-AlertsSnsTopicRef"
-               ]
-              ]
-             }
-            }
-           ]
-          }
-         },
-         {
-          "Name": "SERVICE_SECRET_ARN",
-          "Value": {
-           "Ref": "Secret"
-          }
-         },
-         {
-          "Name": "RUNTIME_JSON",
-          "Value": {
-           "Ref": "RuntimeJson"
-          }
-         },
-         {
-          "Name": "BUILD_ENV_VARS_JSON",
-          "Value": {
-           "Ref": "BuildEnvVarsJson"
-          }
-         },
-         {
-          "Name": "SERVICE_PORT",
-          "Value": "80"
-         },
-         {
-          "Name": "DEPLOYMENT_ID",
-          "Value": {
-           "Ref": "DeploymentId"
-          }
-         },
-         {
-          "Name": "DEPLOYMENT_TYPE",
-          "Value": {
-           "Ref": "DeploymentType"
-          }
-         },
-         {
-          "Name": "PIPELINE_ID",
-          "Value": {
-           "Ref": "PipelineId"
-          }
-         }
-        ],
-        "Image": "aws/codebuild/standard:7.0",
-        "PrivilegedMode": true,
-        "Type": "LINUX_CONTAINER"
-       },
-       "Name": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
           },
-          "-",
           {
-           "Ref": "PipelineId"
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             },
+             "/*"
+            ]
+           ]
           }
          ]
-        ]
-       },
-       "ServiceRole": {
-        "Fn::GetAtt": [
-         "CodeBuildServiceRole",
-         "Arn"
-        ]
-       },
-       "Source": {
-        "BuildSpec": {
-         "Ref": "BuildspecPath"
         },
-        "Type": "CODEPIPELINE"
+        {
+         "Action": [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetAuthorizationToken"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "cloudformation:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "kms:GenerateDataKey*",
+          "kms:Encrypt",
+          "kms:Decrypt"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "sns:SendMessage"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "secretsmanager:GetSecretValue"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         "Waffle-CodeBuildService-",
+         {
+          "Ref": "DeploymentId"
+         },
+         "-",
+         {
+          "Ref": "PipelineId"
+         }
+        ]
+       ]
+      }
+     }
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
        },
-       "SourceVersion": {
-        "Ref": "CommitID"
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-CodeBuildRole"
+      ]
+     ]
+    }
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "CodePipelineExecutionNotificationRule": {
+   "Condition": "ALARMS_ENABLED",
+   "DependsOn": [
+    "Pipeline"
+   ],
+   "Properties": {
+    "DetailType": "FULL",
+    "EventTypeIds": [
+     "codepipeline-pipeline-pipeline-execution-canceled",
+     "codepipeline-pipeline-pipeline-execution-failed",
+     "codepipeline-pipeline-pipeline-execution-resumed",
+     "codepipeline-pipeline-pipeline-execution-started",
+     "codepipeline-pipeline-pipeline-execution-succeeded"
+    ],
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-CodePipelineExecution"
+      ]
+     ]
+    },
+    "Resource": {
+     "Fn::Sub": "arn:aws:codepipeline:${AWS::Region}:${AWS::AccountId}:${Pipeline}"
+    },
+    "Targets": [
+     {
+      "TargetAddress": {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-AlertsSnsTopicRef"
+         ]
+        ]
        }
       },
-      "Type": "AWS::CodeBuild::Project"
-     },
-     "Repo": {
-      "Properties": {
-       "RepositoryName": {
-        "Ref": "AWS::NoValue"
-       },
-       "RepositoryPolicyText": {
-        "Statement": [
-         {
-          "Action": [
-           "ecr:GetDownloadUrlForLayer",
-           "ecr:BatchGetImage",
-           "ecr:BatchCheckLayerAvailability",
-           "ecr:PutImage",
-           "ecr:InitiateLayerUpload",
-           "ecr:UploadLayerPart",
-           "ecr:CompleteLayerUpload",
-           "ecr:GetAuthorizationToken"
-          ],
-          "Effect": "Allow",
-          "Principal": {
-           "AWS": [
-            {
-             "Fn::GetAtt": [
-              "CodePipelineServiceRole",
-              "Arn"
-             ]
-            },
-            {
-             "Fn::GetAtt": [
-              "CodeBuildServiceRole",
-              "Arn"
-             ]
-            }
+      "TargetType": "SNS"
+     }
+    ]
+   },
+   "Type": "AWS::CodeStarNotifications::NotificationRule"
+  },
+  "CodePipelineServiceRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "codepipeline.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:GetBucketVersioning*",
+          "s3:PutObject"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             }
+            ]
+           ]
+          },
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:s3:::",
+             {
+              "Ref": "ArtifactsBucket"
+             },
+             "/*"
+            ]
            ]
           }
+         ]
+        },
+        {
+         "Action": [
+          "codebuild:StartBuild",
+          "codebuild:BatchGetBuilds"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "iam:PassRole"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::GetAtt": [
+            "TaskRole",
+            "Arn"
+           ]
+          },
+          {
+           "Fn::GetAtt": [
+            "ExecutionRole",
+            "Arn"
+           ]
+          }
+         ]
+        },
+        {
+         "Action": [
+          "cloudwatch:*",
+          "ecs:*",
+          "sns:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "iam:PassRole"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::GetAtt": [
+            "CodeBuildServiceRole",
+            "Arn"
+           ]
+          }
+         ]
+        },
+        {
+         "Action": [
+          "codestar-connections:UseConnection"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Ref": "GitConnectionArn"
+         }
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         "Waffle-CodePipelineService-",
+         {
+          "Ref": "DeploymentId"
+         },
+         "-",
+         {
+          "Ref": "PipelineId"
+         }
+        ]
+       ]
+      }
+     }
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-CodePipelineRole"
+      ]
+     ]
+    }
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "Deployment": {
+   "DependsOn": "NLBApiGatewayMethod",
+   "Properties": {
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RestApiId"
+         ]
+        ]
+       }
+      }
+     ]
+    },
+    "StageName": "Prod"
+   },
+   "Type": "AWS::ApiGateway::Deployment"
+  },
+  "ExecutionRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "ecs-tasks.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+     "arn:aws:iam::aws:policy/service-role/AWSTransferLoggingAccess",
+     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+    ],
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         "Waffle-PipelineExecution-",
+         {
+          "Ref": "DeploymentId"
+         },
+         "-",
+         {
+          "Ref": "PipelineId"
+         }
+        ]
+       ]
+      }
+     }
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-ExecutionRole"
+      ]
+     ]
+    }
+   },
+   "Type": "AWS::IAM::Role"
+  },
+  "InstanceSecurityGroup": {
+   "Properties": {
+    "GroupDescription": "From ALB, through instance, to outside",
+    "GroupName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       " for the instance"
+      ]
+     ]
+    },
+    "SecurityGroupIngress": [
+     {
+      "IpProtocol": "-1",
+      "SourceSecurityGroupId": {
+       "Ref": "ALBSecurityGroup"
+      }
+     }
+    ],
+    "VpcId": {
+     "Fn::If": [
+      "CUSTOM_VPC_REF",
+      {
+       "Ref": "VPCRef"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-VPCRef"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::EC2::SecurityGroup"
+  },
+  "LogGroup": {
+   "Properties": {
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": {
+     "Ref": "LogRetentionDays"
+    }
+   },
+   "Type": "AWS::Logs::LogGroup",
+   "UpdateReplacePolicy": "Retain"
+  },
+  "NLBApiGatewayMethod": {
+   "Properties": {
+    "ApiKeyRequired": {
+     "Fn::If": [
+      "API_KEY_REQUIRED",
+      true,
+      false
+     ]
+    },
+    "AuthorizationType": {
+     "Fn::If": [
+      "IAM_AUTH_REQUIRED",
+      "AWS_IAM",
+      "NONE"
+     ]
+    },
+    "HttpMethod": "ANY",
+    "Integration": {
+     "ConnectionId": {
+      "Ref": "NlbVpcLink"
+     },
+     "ConnectionType": "VPC_LINK",
+     "IntegrationHttpMethod": "ANY",
+     "RequestParameters": {
+      "integration.request.path.proxy": "method.request.path.proxy"
+     },
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::GetAtt": [
+          "NetworkLoadBalancer",
+          "DNSName"
+         ]
+        },
+        "/{proxy}"
+       ]
+      ]
+     }
+    },
+    "RequestParameters": {
+     "method.request.path.proxy": "true"
+    },
+    "ResourceId": {
+     "Ref": "NLBApiGatewayProxyResource"
+    },
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RestApiId"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Method"
+  },
+  "NLBApiGatewayProxyResource": {
+   "Properties": {
+    "ParentId": {
+     "Ref": "NLBApiGatewayResource"
+    },
+    "PathPart": "{proxy+}",
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RestApiId"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Resource"
+  },
+  "NLBApiGatewayResource": {
+   "Properties": {
+    "ParentId": {
+     "Fn::If": [
+      "CUSTOM_ROOT_RESOURCE_ID",
+      {
+       "Ref": "RootResourceId"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RootResourceId"
+         ]
+        ]
+       }
+      }
+     ]
+    },
+    "PathPart": {
+     "Ref": "PipelineId"
+    },
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RestApiId"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Resource"
+  },
+  "NLBApiGatewayRootMethod": {
+   "Properties": {
+    "ApiKeyRequired": {
+     "Fn::If": [
+      "API_KEY_REQUIRED",
+      true,
+      false
+     ]
+    },
+    "AuthorizationType": {
+     "Fn::If": [
+      "IAM_AUTH_REQUIRED",
+      "AWS_IAM",
+      "NONE"
+     ]
+    },
+    "HttpMethod": "ANY",
+    "Integration": {
+     "ConnectionId": {
+      "Ref": "NlbVpcLink"
+     },
+     "ConnectionType": "VPC_LINK",
+     "IntegrationHttpMethod": "ANY",
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::GetAtt": [
+          "NetworkLoadBalancer",
+          "DNSName"
+         ]
+        },
+        "/"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "NLBApiGatewayResource"
+    },
+    "RestApiId": {
+     "Fn::If": [
+      "CUSTOM_RESAPI_ID",
+      {
+       "Ref": "RestApiId"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-RestApiId"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ApiGateway::Method"
+  },
+  "NLBListener": {
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "NLBTargetGroup"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "NetworkLoadBalancer"
+    },
+    "Port": 80,
+    "Protocol": "TCP"
+   },
+   "Type": "AWS::ElasticLoadBalancingV2::Listener"
+  },
+  "NLBSecurityGroup": {
+   "Properties": {
+    "GroupDescription": "From anywhere to the NLB",
+    "GroupName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       " for NLB"
+      ]
+     ]
+    },
+    "SecurityGroupEgress": [
+     {
+      "DestinationSecurityGroupId": {
+       "Fn::GetAtt": [
+        "ALBSecurityGroup",
+        "GroupId"
+       ]
+      },
+      "FromPort": 1,
+      "IpProtocol": "tcp",
+      "ToPort": 65535
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "FromPort": 1,
+      "IpProtocol": "tcp",
+      "ToPort": 65535
+     }
+    ],
+    "VpcId": {
+     "Fn::If": [
+      "CUSTOM_VPC_REF",
+      {
+       "Ref": "VPCRef"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-VPCRef"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::EC2::SecurityGroup"
+  },
+  "NLBTargetGroup": {
+   "Properties": {
+    "HealthCheckIntervalSeconds": "80",
+    "HealthCheckPath": "/health_check",
+    "HealthCheckProtocol": "HTTP",
+    "HealthCheckTimeoutSeconds": "50",
+    "HealthyThresholdCount": "2",
+    "Matcher": {
+     "HttpCode": "200-299"
+    },
+    "Port": 80,
+    "Protocol": "TCP",
+    "TargetType": "alb",
+    "Targets": [
+     {
+      "Id": {
+       "Ref": "ApplicationLoadBalancer"
+      },
+      "Port": 80
+     }
+    ],
+    "UnhealthyThresholdCount": "5",
+    "VpcId": {
+     "Fn::If": [
+      "CUSTOM_VPC_REF",
+      {
+       "Ref": "VPCRef"
+      },
+      {
+       "Fn::ImportValue": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "DeploymentId"
+          },
+          "-VPCRef"
+         ]
+        ]
+       }
+      }
+     ]
+    }
+   },
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup"
+  },
+  "NetworkLoadBalancer": {
+   "Properties": {
+    "Scheme": "internal",
+    "SecurityGroups": [
+     {
+      "Ref": "ALBSecurityGroup"
+     },
+     {
+      "Ref": "NLBSecurityGroup"
+     }
+    ],
+    "Subnets": [
+     {
+      "Fn::If": [
+       "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
+       {
+        "Ref": "PrimaryPrivateSubnetRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-PrimaryPrivateSubnetRef"
+          ]
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "Fn::If": [
+       "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
+       {
+        "Ref": "SecondaryPrivateSubnetRef"
+       },
+       {
+        "Fn::ImportValue": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Ref": "DeploymentId"
+           },
+           "-SecondaryPrivateSubnetRef"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "Type": "network"
+   },
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer"
+  },
+  "NlbVpcLink": {
+   "Properties": {
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-NlbVpcLink"
+      ]
+     ]
+    },
+    "TargetArns": [
+     {
+      "Ref": "NetworkLoadBalancer"
+     }
+    ]
+   },
+   "Type": "AWS::ApiGateway::VpcLink"
+  },
+  "Pipeline": {
+   "DependsOn": [
+    "Project"
+   ],
+   "Properties": {
+    "ArtifactStore": {
+     "Location": {
+      "Ref": "ArtifactsBucket"
+     },
+     "Type": "S3"
+    },
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "PipelineType": "V2",
+    "RestartExecutionOnUpdate": true,
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "CodePipelineServiceRole",
+      "Arn"
+     ]
+    },
+    "Stages": [
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Source",
+         "Owner": "AWS",
+         "Provider": "CodeStarSourceConnection",
+         "Version": "1"
+        },
+        "Configuration": {
+         "BranchName": {
+          "Ref": "GitBranch"
+         },
+         "ConnectionArn": {
+          "Ref": "GitConnectionArn"
+         },
+         "FullRepositoryId": {
+          "Ref": "GitRepositoryId"
+         }
+        },
+        "Name": "BuildSourceAction",
+        "OutputArtifacts": [
+         {
+          "Name": "SourceArtifact"
          }
         ],
-        "Version": "2008-10-17"
+        "RunOrder": 1
        }
-      },
-      "Type": "AWS::ECR::Repository"
-     },
-     "Secret": {
-      "Properties": {
-       "Description": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          {
-           "Ref": "PipelineId"
-          }
-         ]
-        ]
-       },
-       "SecretString": "{}"
-      },
-      "Type": "AWS::SecretsManager::Secret"
-     },
-     "Service": {
-      "DependsOn": [
-       "TaskDefinition",
-       "Repo",
-       "ALBListener"
       ],
-      "Properties": {
-       "Cluster": {
-        "Fn::GetAtt": [
-         "Cluster",
-         "Arn"
-        ]
-       },
-       "DeploymentConfiguration": {
-        "MaximumPercent": "200",
-        "MinimumHealthyPercent": "50"
-       },
-       "DesiredCount": {
-        "Ref": "InstanceCount"
-       },
-       "HealthCheckGracePeriodSeconds": 60,
-       "LaunchType": "FARGATE",
-       "LoadBalancers": [
-        {
-         "ContainerName": {
-          "Ref": "Repo"
-         },
-         "ContainerPort": 80,
-         "TargetGroupArn": {
-          "Ref": "ALBTargetGroup"
-         }
-        }
-       ],
-       "NetworkConfiguration": {
-        "AwsvpcConfiguration": {
-         "AssignPublicIp": "DISABLED",
-         "SecurityGroups": [
-          {
-           "Ref": "InstanceSecurityGroup"
-          },
-          {
-           "Fn::If": [
-            "CUSTOM_ECR_INCOMMING_CONNECTIONS_SG",
-            {
-             "Ref": "EcrIncomingConnectionSecurityGroupId"
-            },
-            {
-             "Fn::ImportValue": {
-              "Fn::Join": [
-               "",
-               [
-                {
-                 "Ref": "DeploymentId"
-                },
-                "-EcrIncomingConnectionSecurityGroupId"
-               ]
-              ]
-             }
-            }
-           ]
-          },
-          {
-           "Fn::If": [
-            "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG",
-            {
-             "Ref": "LocalOutgoingConnectionSecurityGroupId"
-            },
-            {
-             "Fn::ImportValue": {
-              "Fn::Join": [
-               "",
-               [
-                {
-                 "Ref": "DeploymentId"
-                },
-                "-LocalOutgoingConnectionSecurityGroupId"
-               ]
-              ]
-             }
-            }
-           ]
-          },
-          {
-           "Fn::If": [
-            "CUSTOM_NAT_OUTGOING_CONNECTIONS_SG",
-            {
-             "Ref": "NatOutgoingConnectionSecurityGroupId"
-            },
-            {
-             "Fn::ImportValue": {
-              "Fn::Join": [
-               "",
-               [
-                {
-                 "Ref": "DeploymentId"
-                },
-                "-NatOutgoingConnectionSecurityGroupId"
-               ]
-              ]
-             }
-            }
-           ]
-          }
-         ],
-         "Subnets": [
-          {
-           "Fn::If": [
-            "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
-            {
-             "Ref": "PrimaryPrivateSubnetRef"
-            },
-            {
-             "Fn::ImportValue": {
-              "Fn::Join": [
-               "",
-               [
-                {
-                 "Ref": "DeploymentId"
-                },
-                "-PrimaryPrivateSubnetRef"
-               ]
-              ]
-             }
-            }
-           ]
-          },
-          {
-           "Fn::If": [
-            "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
-            {
-             "Ref": "SecondaryPrivateSubnetRef"
-            },
-            {
-             "Fn::ImportValue": {
-              "Fn::Join": [
-               "",
-               [
-                {
-                 "Ref": "DeploymentId"
-                },
-                "-SecondaryPrivateSubnetRef"
-               ]
-              ]
-             }
-            }
-           ]
-          }
-         ]
-        }
-       },
-       "SchedulingStrategy": "REPLICA",
-       "ServiceName": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          "-",
-          {
-           "Ref": "PipelineId"
-          }
-         ]
-        ]
-       },
-       "TaskDefinition": {
-        "Ref": "TaskDefinition"
-       }
-      },
-      "Type": "AWS::ECS::Service"
+      "Name": "Source"
      },
-     "TaskDefinition": {
-      "DependsOn": "Repo",
-      "Properties": {
-       "ContainerDefinitions": [
-        {
-         "Environment": [
-          {
-           "Name": "AWS_REGION",
-           "Value": {
-            "Ref": "AWS::Region"
-           }
-          },
-          {
-           "Name": "DEPLOYMENT_SECRET_ARN",
-           "Value": {
-            "Fn::If": [
-             "CUSTOM_DEPLOYMENT_SECRET_ARN",
-             {
-              "Ref": "DeploymentSecretArn"
-             },
-             {
-              "Fn::ImportValue": {
-               "Fn::Join": [
-                "",
-                [
-                 {
-                  "Ref": "DeploymentId"
-                 },
-                 "-DeploymentSecretArn"
-                ]
-               ]
-              }
-             }
-            ]
-           }
-          },
-          {
-           "Name": "ALERTS_TOPIC_ARN",
-           "Value": {
-            "Fn::If": [
-             "CUSTOM_ALERT_SNS_REF",
-             {
-              "Ref": "AlertsSnsTopicRef"
-             },
-             {
-              "Fn::ImportValue": {
-               "Fn::Join": [
-                "",
-                [
-                 {
-                  "Ref": "DeploymentId"
-                 },
-                 "-AlertsSnsTopicRef"
-                ]
-               ]
-              }
-             }
-            ]
-           }
-          },
-          {
-           "Name": "SERVICE_SECRET_ARN",
-           "Value": {
-            "Ref": "Secret"
-           }
-          },
-          {
-           "Name": "RUNTIME_JSON",
-           "Value": {
-            "Ref": "RuntimeJson"
-           }
-          },
-          {
-           "Name": "DEPLOYMENT_ID",
-           "Value": {
-            "Ref": "DeploymentId"
-           }
-          },
-          {
-           "Name": "DEPLOYMENT_TYPE",
-           "Value": {
-            "Ref": "DeploymentType"
-           }
-          },
-          {
-           "Name": "PIPELINE_ID",
-           "Value": {
-            "Ref": "PipelineId"
-           }
-          }
-         ],
-         "Essential": true,
-         "HealthCheck": {
-          "Command": [
-           "CMD-SHELL",
-           "curl -f http://localhost:80/health_check || exit 1"
-          ],
-          "StartPeriod": 60
-         },
-         "Image": {
-          "Fn::Join": [
-           "",
-           [
-            {
-             "Fn::Join": [
-              "",
-              [
-               {
-                "Ref": "AWS::AccountId"
-               },
-               ".dkr.ecr.",
-               {
-                "Ref": "AWS::Region"
-               },
-               ".amazonaws.com/",
-               {
-                "Ref": "Repo"
-               }
-              ]
-             ]
-            },
-            ":latest"
-           ]
-          ]
-         },
-         "LogConfiguration": {
-          "LogDriver": "awslogs",
-          "Options": {
-           "awslogs-group": {
-            "Ref": "LogGroup"
-           },
-           "awslogs-region": {
-            "Ref": "AWS::Region"
-           },
-           "awslogs-stream-prefix": {
-            "Ref": "PipelineId"
-           }
-          }
-         },
-         "Name": {
-          "Ref": "Repo"
-         },
-         "PortMappings": [
-          {
-           "ContainerPort": 80,
-           "HostPort": 80,
-           "Protocol": "tcp"
-          }
-         ]
-        }
-       ],
-       "Cpu": {
-        "Ref": "EcsTaskCPU"
-       },
-       "ExecutionRoleArn": {
-        "Fn::GetAtt": [
-         "ExecutionRole",
-         "Arn"
-        ]
-       },
-       "Family": {
-        "Fn::Join": [
-         "",
-         [
-          {
-           "Ref": "DeploymentId"
-          },
-          "-",
-          {
-           "Ref": "PipelineId"
-          }
-         ]
-        ]
-       },
-       "Memory": {
-        "Ref": "EcsTaskRAM"
-       },
-       "NetworkMode": "awsvpc",
-       "RequiresCompatibilities": [
-        "FARGATE"
-       ],
-       "TaskRoleArn": {
-        "Fn::GetAtt": [
-         "TaskRole",
-         "Arn"
-        ]
-       }
-      },
-      "Type": "AWS::ECS::TaskDefinition"
-     },
-     "TaskRole": {
-      "Properties": {
-       "AssumeRolePolicyDocument": {
-        "Statement": [
-         {
-          "Action": [
-           "sts:AssumeRole"
-          ],
-          "Effect": "Allow",
-          "Principal": {
-           "Service": [
-            "ecs-tasks.amazonaws.com"
-           ]
-          }
-         }
-        ]
-       },
-       "Path": "/",
-       "Policies": [
-        {
-         "PolicyDocument": {
-          "Statement": [
-           {
-            "Action": [
-             "secretsmanager:Describe*",
-             "secretsmanager:Get*",
-             "secretsmanager:List*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "ssm:Get*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "rds:*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "ses:*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "dynamodb:*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           },
-           {
-            "Action": [
-             "cognito-idp:*"
-            ],
-            "Effect": "Allow",
-            "Resource": {
-             "Fn::If": [
-              "CUSTOM_USER_POOL_ARN",
-              {
-               "Ref": "AuthUserPoolArn"
-              },
-              {
-               "Fn::ImportValue": {
-                "Fn::Join": [
-                 "",
-                 [
-                  {
-                   "Ref": "DeploymentId"
-                  },
-                  "-AuthUserPoolArn"
-                 ]
-                ]
-               }
-              }
-             ]
-            }
-           },
-           {
-            "Action": [
-             "secretsmanager:GetSecretValue",
-             "secretsmanager:UpdateSecret"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-           }
-          ],
-          "Version": "2012-10-17"
-         },
-         "PolicyName": {
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
           "Fn::Join": [
            "",
            [
             {
              "Ref": "DeploymentId"
             },
+            "-",
             {
              "Ref": "PipelineId"
-            },
-            "-Task"
+            }
            ]
           ]
          }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "SourceArtifact"
+         }
+        ],
+        "Name": "BuildAction",
+        "OutputArtifacts": [
+         {
+          "Name": "BuildArtifact"
+         }
+        ],
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Build"
+     },
+     {
+      "Fn::If": [
+       "MANUAL_APPROVAL_SELECTED",
+       {
+        "Actions": [
+         {
+          "ActionTypeId": {
+           "Category": "Approval",
+           "Owner": "AWS",
+           "Provider": "Manual",
+           "Version": "1"
+          },
+          "Name": "ApprovalAction",
+          "RunOrder": 1
+         }
+        ],
+        "Name": "Approval"
+       },
+       {
+        "Ref": "AWS::NoValue"
+       }
+      ]
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "ECS",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ClusterName": {
+          "Ref": "Cluster"
+         },
+         "FileName": "imagedefinitions.json",
+         "ServiceName": {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "DeploymentId"
+            },
+            "-",
+            {
+             "Ref": "PipelineId"
+            }
+           ]
+          ]
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "BuildArtifact"
+         }
+        ],
+        "Name": "DeployAction",
+        "RunOrder": 5
+       }
+      ],
+      "Name": "Deploy"
+     }
+    ]
+   },
+   "Type": "AWS::CodePipeline::Pipeline"
+  },
+  "Project": {
+   "Properties": {
+    "Artifacts": {
+     "Type": "CODEPIPELINE"
+    },
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       " build project"
+      ]
+     ]
+    },
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "EnvironmentVariables": [
+      {
+       "Name": "AWS_REGION",
+       "Value": {
+        "Ref": "AWS::Region"
+       }
+      },
+      {
+       "Name": "REPOSITORY_URI",
+       "Value": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ".dkr.ecr.",
+          {
+           "Ref": "AWS::Region"
+          },
+          ".amazonaws.com/",
+          {
+           "Ref": "Repo"
+          }
+         ]
+        ]
+       }
+      },
+      {
+       "Name": "REPO_NAME",
+       "Value": {
+        "Ref": "Repo"
+       }
+      },
+      {
+       "Name": "DEPLOYMENT_SECRET_ARN",
+       "Value": {
+        "Fn::If": [
+         "CUSTOM_DEPLOYMENT_SECRET_ARN",
+         {
+          "Ref": "DeploymentSecretArn"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-DeploymentSecretArn"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "Name": "ALERTS_TOPIC_ARN",
+       "Value": {
+        "Fn::If": [
+         "CUSTOM_ALERT_SNS_REF",
+         {
+          "Ref": "AlertsSnsTopicRef"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-AlertsSnsTopicRef"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "Name": "SERVICE_SECRET_ARN",
+       "Value": {
+        "Ref": "Secret"
+       }
+      },
+      {
+       "Name": "RUNTIME_JSON",
+       "Value": {
+        "Ref": "RuntimeJson"
+       }
+      },
+      {
+       "Name": "BUILD_ENV_VARS_JSON",
+       "Value": {
+        "Ref": "BuildEnvVarsJson"
+       }
+      },
+      {
+       "Name": "SERVICE_PORT",
+       "Value": {
+        "Ref": "ServicePort"
+       }
+      },
+      {
+       "Name": "DEPLOYMENT_ID",
+       "Value": {
+        "Ref": "DeploymentId"
+       }
+      },
+      {
+       "Name": "PIPELINE_ID",
+       "Value": {
+        "Ref": "PipelineId"
+       }
+      }
+     ],
+     "Image": "aws/codebuild/standard:7.0",
+     "PrivilegedMode": true,
+     "Type": "LINUX_CONTAINER"
+    },
+    "Name": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "CodeBuildServiceRole",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": {
+      "Fn::If": [
+       "DOCKERFILE_PROVIDED",
+       {
+        "Fn::Join": [
+         "",
+         [
+          "\nversion: 0.2\nphases:\n  install:\n    commands:\n      - timeout 15 sh -c \"until docker info; do echo .; sleep 1; done\"\n  pre_build:\n    commands:\n      - aws --version\n      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI\n      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)\n      - IMAGE_TAG=${COMMIT_HASH:=latest}\n  build:\n    commands:\n      - echo Build started on `date`\n      - echo Building the Docker image...\n      - docker build -f ",
+          {
+           "Ref": "DockerfilePath"
+          },
+          " -t $REPOSITORY_URI:latest .\n      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG\n  post_build:\n    commands:\n      - echo Build completed on `date`\n      - echo Pushing the Docker images...\n      - docker push $REPOSITORY_URI:latest\n      - docker push $REPOSITORY_URI:$IMAGE_TAG\n      - echo Writing image definitions file...\n      - printf '[{\"name\":\"%s\",\"imageUri\":\"%s\"}]' $REPO_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json\nartifacts:\n  files: imagedefinitions.json\n"
+         ]
+        ]
+       },
+       {
+        "Ref": "BuildspecPath"
+       }
+      ]
+     },
+     "Type": "CODEPIPELINE"
+    },
+    "SourceVersion": {
+     "Ref": "CommitID"
+    }
+   },
+   "Type": "AWS::CodeBuild::Project"
+  },
+  "Repo": {
+   "Properties": {
+    "RepositoryName": {
+     "Ref": "AWS::NoValue"
+    },
+    "RepositoryPolicyText": {
+     "Statement": [
+      {
+       "Action": [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:PutImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload",
+        "ecr:GetAuthorizationToken"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": [
+         {
+          "Fn::GetAtt": [
+           "CodePipelineServiceRole",
+           "Arn"
+          ]
+         },
+         {
+          "Fn::GetAtt": [
+           "CodeBuildServiceRole",
+           "Arn"
+          ]
+         }
+        ]
+       }
+      }
+     ],
+     "Version": "2008-10-17"
+    }
+   },
+   "Type": "AWS::ECR::Repository"
+  },
+  "Secret": {
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "SecretString": "{}"
+   },
+   "Type": "AWS::SecretsManager::Secret"
+  },
+  "Service": {
+   "DependsOn": [
+    "TaskDefinition",
+    "Repo",
+    "ALBListener",
+    "ExecutionRole"
+   ],
+   "Properties": {
+    "Cluster": {
+     "Fn::GetAtt": [
+      "Cluster",
+      "Arn"
+     ]
+    },
+    "DeploymentConfiguration": {
+     "MaximumPercent": "200",
+     "MinimumHealthyPercent": "50"
+    },
+    "DesiredCount": {
+     "Ref": "InstanceCount"
+    },
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": {
+       "Ref": "Repo"
+      },
+      "ContainerPort": {
+       "Ref": "ServicePort"
+      },
+      "TargetGroupArn": {
+       "Ref": "ALBTargetGroup"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Ref": "InstanceSecurityGroup"
+       },
+       {
+        "Fn::If": [
+         "CUSTOM_ECR_INCOMMING_CONNECTIONS_SG",
+         {
+          "Ref": "EcrIncomingConnectionSecurityGroupId"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-EcrIncomingConnectionSecurityGroupId"
+            ]
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "Fn::If": [
+         "CUSTOM_LOCAL_OUTGOING_CONNECTIONS_SG",
+         {
+          "Ref": "LocalOutgoingConnectionSecurityGroupId"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-LocalOutgoingConnectionSecurityGroupId"
+            ]
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "Fn::If": [
+         "CUSTOM_NAT_OUTGOING_CONNECTIONS_SG",
+         {
+          "Ref": "NatOutgoingConnectionSecurityGroupId"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-NatOutgoingConnectionSecurityGroupId"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      ],
+      "Subnets": [
+       {
+        "Fn::If": [
+         "CUSTOM_PRIMARY_PRIVATE_SUBNET_REF",
+         {
+          "Ref": "PrimaryPrivateSubnetRef"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-PrimaryPrivateSubnetRef"
+            ]
+           ]
+          }
+         }
+        ]
+       },
+       {
+        "Fn::If": [
+         "CUSTOM_SECONDARY_PRIVATE_SUBNET_REF",
+         {
+          "Ref": "SecondaryPrivateSubnetRef"
+         },
+         {
+          "Fn::ImportValue": {
+           "Fn::Join": [
+            "",
+            [
+             {
+              "Ref": "DeploymentId"
+             },
+             "-SecondaryPrivateSubnetRef"
+            ]
+           ]
+          }
+         }
+        ]
+       }
+      ]
+     }
+    },
+    "SchedulingStrategy": "REPLICA",
+    "ServiceName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "TaskDefinition": {
+     "Ref": "TaskDefinition"
+    }
+   },
+   "Type": "AWS::ECS::Service"
+  },
+  "TaskDefinition": {
+   "DependsOn": "Repo",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "AWS_REGION",
+        "Value": {
+         "Ref": "AWS::Region"
+        }
+       },
+       {
+        "Name": "DEPLOYMENT_SECRET_ARN",
+        "Value": {
+         "Fn::If": [
+          "CUSTOM_DEPLOYMENT_SECRET_ARN",
+          {
+           "Ref": "DeploymentSecretArn"
+          },
+          {
+           "Fn::ImportValue": {
+            "Fn::Join": [
+             "",
+             [
+              {
+               "Ref": "DeploymentId"
+              },
+              "-DeploymentSecretArn"
+             ]
+            ]
+           }
+          }
+         ]
+        }
+       },
+       {
+        "Name": "ALERTS_TOPIC_ARN",
+        "Value": {
+         "Fn::If": [
+          "CUSTOM_ALERT_SNS_REF",
+          {
+           "Ref": "AlertsSnsTopicRef"
+          },
+          {
+           "Fn::ImportValue": {
+            "Fn::Join": [
+             "",
+             [
+              {
+               "Ref": "DeploymentId"
+              },
+              "-AlertsSnsTopicRef"
+             ]
+            ]
+           }
+          }
+         ]
+        }
+       },
+       {
+        "Name": "SERVICE_SECRET_ARN",
+        "Value": {
+         "Ref": "Secret"
+        }
+       },
+       {
+        "Name": "RUNTIME_JSON",
+        "Value": {
+         "Ref": "RuntimeJson"
+        }
+       },
+       {
+        "Name": "DEPLOYMENT_ID",
+        "Value": {
+         "Ref": "DeploymentId"
+        }
+       },
+       {
+        "Name": "PIPELINE_ID",
+        "Value": {
+         "Ref": "PipelineId"
+        }
+       }
+      ],
+      "Essential": true,
+      "HealthCheck": {
+       "Fn::If": [
+        "HEALTH_CHECK_ENABLED",
+        {
+         "Command": [
+          "CMD-SHELL",
+          {
+           "Fn::Join": [
+            "",
+            [
+             "curl -f http://localhost:",
+             {
+              "Ref": "HealthCheckPort"
+             },
+             {
+              "Ref": "HealthCheckPath"
+             },
+             " || exit 1"
+            ]
+           ]
+          }
+         ],
+         "StartPeriod": 60
+        },
+        {
+         "Ref": "AWS::NoValue"
         }
        ]
       },
-      "Type": "AWS::IAM::Role"
+      "Image": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Fn::Join": [
+           "",
+           [
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ".dkr.ecr.",
+            {
+             "Ref": "AWS::Region"
+            },
+            ".amazonaws.com/",
+            {
+             "Ref": "Repo"
+            }
+           ]
+          ]
+         },
+         ":latest"
+        ]
+       ]
+      },
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "LogGroup"
+        },
+        "awslogs-region": {
+         "Ref": "AWS::Region"
+        },
+        "awslogs-stream-prefix": {
+         "Ref": "PipelineId"
+        }
+       }
+      },
+      "Name": {
+       "Ref": "Repo"
+      },
+      "PortMappings": [
+       {
+        "ContainerPort": {
+         "Ref": "ServicePort"
+        },
+        "Protocol": "tcp"
+       }
+      ]
      }
+    ],
+    "Cpu": {
+     "Ref": "EcsTaskCPU"
+    },
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "ExecutionRole",
+      "Arn"
+     ]
+    },
+    "Family": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       }
+      ]
+     ]
+    },
+    "Memory": {
+     "Ref": "EcsTaskRAM"
+    },
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "TaskRole",
+      "Arn"
+     ]
     }
-   }
+   },
+   "Type": "AWS::ECS::TaskDefinition"
+  },
+  "TaskRole": {
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sts:AssumeRole"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "ecs-tasks.amazonaws.com"
+        ]
+       }
+      }
+     ]
+    },
+    "Path": "/",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "secretsmanager:Describe*",
+          "secretsmanager:Get*",
+          "secretsmanager:List*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "ssm:Get*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "rds:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "ses:*"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        },
+        {
+         "Action": [
+          "cognito-idp:*"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::If": [
+           "CUSTOM_USER_POOL_ARN",
+           {
+            "Ref": "AuthUserPoolArn"
+           },
+           {
+            "Fn::ImportValue": {
+             "Fn::Join": [
+              "",
+              [
+               {
+                "Ref": "DeploymentId"
+               },
+               "-AuthUserPoolArn"
+              ]
+             ]
+            }
+           }
+          ]
+         }
+        },
+        {
+         "Action": [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:UpdateSecret"
+         ],
+         "Effect": "Allow",
+         "Resource": "*"
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Ref": "DeploymentId"
+         },
+         "-",
+         {
+          "Ref": "PipelineId"
+         },
+         "-Task"
+        ]
+       ]
+      }
+     }
+    ],
+    "RoleName": {
+     "Fn::Join": [
+      "",
+      [
+       "Waffle-",
+       {
+        "Ref": "DeploymentId"
+       },
+       "-",
+       {
+        "Ref": "PipelineId"
+       },
+       "-TaskRole"
+      ]
+     ]
+    }
+   },
+   "Type": "AWS::IAM::Role"
+  }
+ }
+}
