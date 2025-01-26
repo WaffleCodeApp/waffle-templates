@@ -7,6 +7,8 @@ This repository is a set of infrastructure templates for AWS CloudFormation to h
 
 The goal of this project is to enable businesses to start web application development projects with a small team that doesn't have devops engineering experience. The idea is to start with being compliant and audit-ready from the first-line of code using default industry standards and opinionated practices. And only hire devops personnel once the project requires customization to be cost efficient at large-scale.
 
+If you want to use the Waffle templates but do not want to work with Cloudformation code, we now offer an affordable web-hosted version of Waffle that deploys these templates into your AWS account for you, that makes AWS as easy to use as Heroku/Vercel. See [wafflesoc2.com](https://wafflesoc2.com) for more information.
+
 ## What are these templates?
 
 There are eight templates that can be used together to set up an infrastructure in AWS that serves the typical requirements of early-stage web application development projects.
